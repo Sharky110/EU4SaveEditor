@@ -1,0 +1,10 @@
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\bin\Debug\EU4SaveEditor.exe.config
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\bin\Debug\EU4SaveEditor.exe
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\bin\Debug\EU4SaveEditor.pdb
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.csprojAssemblyReference.cache
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.Form1.resources
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.Properties.Resources.resources
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.GenerateResource.cache
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.CoreCompileInputs.cache
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.exe
+c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.pdb
