@@ -4,36 +4,58 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
+        List<string> countries = new List<string>();
+        bool duplicate = false;
+
         public Form1()
         {
             InitializeComponent();
         }
 
-        private void FileOutput(string[] FileRows )
+        public void FindAllCountries(string[] FileRows)
         {
-            for (int i = 0; i < 10000; i++)
+            Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
+            
+            foreach (string str in FileRows)
             {
-                label2.Text = i.ToString();
-                listBox1.Items.Add(FileRows[i]);
+                if (countryRegEx.IsMatch(str))
+                {
+                    for(int i=0;i< countries.Count;i++)
+                    {
+                        if(str==countries[i])
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+                    if(duplicate==false)
+                    {
+                        countries.Add(str.Remove(0, 8));
+                        comboBoxCountries.Items.Add(str.Remove(0, 8));
+                    }
+                    duplicate = false;
+                }
             }
         }
 
         private void OpenFileButton_Click(object sender, EventArgs e)
         {
-            //OpenFileDialog ofd = new OpenFileDialog();
-            string SavedFile = File.ReadAllText(@"C:/savegames/Ryazan.eu4");
-            string[] FileRows = SavedFile.Split('\n');
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.ShowDialog();
+            string SourceFile = File.ReadAllText(fileDialog.FileName);
+            string[] FileRows = SourceFile.Split('\n');
             label1.Text = FileRows.Length.ToString();
-            FileOutput(FileRows);
+            labelLoadedFile.Text = fileDialog.FileName;
+            FindAllCountries(FileRows);
         }
     }
 }
