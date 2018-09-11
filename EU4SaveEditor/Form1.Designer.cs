@@ -29,11 +29,13 @@
         private void InitializeComponent()
         {
             this.OpenFileButton = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelCountries = new System.Windows.Forms.Label();
+            this.labelProvs = new System.Windows.Forms.Label();
             this.labelChooseCountry = new System.Windows.Forms.Label();
-            this.comboBoxCountries = new System.Windows.Forms.ComboBox();
             this.labelLoadedFile = new System.Windows.Forms.Label();
+            this.ListBoxCountries = new System.Windows.Forms.ListBox();
+            this.ListBoxProvinces = new System.Windows.Forms.ListBox();
+            this.labelChooseProvince = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // OpenFileButton
@@ -46,41 +48,32 @@
             this.OpenFileButton.UseVisualStyleBackColor = true;
             this.OpenFileButton.Click += new System.EventHandler(this.OpenFileButton_Click);
             // 
-            // label1
+            // labelCountries
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(737, 514);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
+            this.labelCountries.AutoSize = true;
+            this.labelCountries.Location = new System.Drawing.Point(699, 201);
+            this.labelCountries.Name = "labelCountries";
+            this.labelCountries.Size = new System.Drawing.Size(73, 13);
+            this.labelCountries.TabIndex = 3;
+            this.labelCountries.Text = "labelCountries";
             // 
-            // label2
+            // labelProvs
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(737, 536);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "label2";
+            this.labelProvs.AutoSize = true;
+            this.labelProvs.Location = new System.Drawing.Point(699, 246);
+            this.labelProvs.Name = "labelProvs";
+            this.labelProvs.Size = new System.Drawing.Size(56, 13);
+            this.labelProvs.TabIndex = 4;
+            this.labelProvs.Text = "labelProvs";
             // 
             // labelChooseCountry
             // 
             this.labelChooseCountry.AutoSize = true;
-            this.labelChooseCountry.Location = new System.Drawing.Point(16, 66);
+            this.labelChooseCountry.Location = new System.Drawing.Point(12, 74);
             this.labelChooseCountry.Name = "labelChooseCountry";
             this.labelChooseCountry.Size = new System.Drawing.Size(84, 13);
             this.labelChooseCountry.TabIndex = 5;
             this.labelChooseCountry.Text = "Choose country:";
-            // 
-            // comboBoxCountries
-            // 
-            this.comboBoxCountries.FormattingEnabled = true;
-            this.comboBoxCountries.Location = new System.Drawing.Point(106, 63);
-            this.comboBoxCountries.Name = "comboBoxCountries";
-            this.comboBoxCountries.Size = new System.Drawing.Size(111, 21);
-            this.comboBoxCountries.TabIndex = 6;
-            this.comboBoxCountries.Text = "<country>";
             // 
             // labelLoadedFile
             // 
@@ -90,16 +83,44 @@
             this.labelLoadedFile.Size = new System.Drawing.Size(0, 13);
             this.labelLoadedFile.TabIndex = 7;
             // 
+            // ListBoxCountries
+            // 
+            this.ListBoxCountries.FormattingEnabled = true;
+            this.ListBoxCountries.Location = new System.Drawing.Point(12, 90);
+            this.ListBoxCountries.Name = "ListBoxCountries";
+            this.ListBoxCountries.Size = new System.Drawing.Size(205, 342);
+            this.ListBoxCountries.TabIndex = 8;
+            // 
+            // ListBoxProvinces
+            // 
+            this.ListBoxProvinces.FormattingEnabled = true;
+            this.ListBoxProvinces.Location = new System.Drawing.Point(226, 90);
+            this.ListBoxProvinces.Name = "ListBoxProvinces";
+            this.ListBoxProvinces.Size = new System.Drawing.Size(205, 342);
+            this.ListBoxProvinces.Sorted = true;
+            this.ListBoxProvinces.TabIndex = 10;
+            // 
+            // labelChooseProvince
+            // 
+            this.labelChooseProvince.AutoSize = true;
+            this.labelChooseProvince.Location = new System.Drawing.Point(226, 74);
+            this.labelChooseProvince.Name = "labelChooseProvince";
+            this.labelChooseProvince.Size = new System.Drawing.Size(90, 13);
+            this.labelChooseProvince.TabIndex = 9;
+            this.labelChooseProvince.Text = "Choose province:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.ClientSize = new System.Drawing.Size(784, 446);
+            this.Controls.Add(this.ListBoxProvinces);
+            this.Controls.Add(this.labelChooseProvince);
+            this.Controls.Add(this.ListBoxCountries);
             this.Controls.Add(this.labelLoadedFile);
-            this.Controls.Add(this.comboBoxCountries);
             this.Controls.Add(this.labelChooseCountry);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelProvs);
+            this.Controls.Add(this.labelCountries);
             this.Controls.Add(this.OpenFileButton);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -110,11 +131,13 @@
 
         #endregion
         private System.Windows.Forms.Button OpenFileButton;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelCountries;
+        private System.Windows.Forms.Label labelProvs;
         private System.Windows.Forms.Label labelChooseCountry;
-        private System.Windows.Forms.ComboBox comboBoxCountries;
         private System.Windows.Forms.Label labelLoadedFile;
+        private System.Windows.Forms.ListBox ListBoxCountries;
+        private System.Windows.Forms.ListBox ListBoxProvinces;
+        private System.Windows.Forms.Label labelChooseProvince;
     }
 }
 

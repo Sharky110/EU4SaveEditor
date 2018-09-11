@@ -13,8 +13,7 @@ namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
-        List<string> countries = new List<string>();
-        bool duplicate = false;
+        SearchEngine SE1 = new SearchEngine();
 
         public Form1()
         {
@@ -23,39 +22,30 @@ namespace EU4SaveEditor
 
         public void FindAllCountries(string[] FileRows)
         {
-            Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
-            
-            foreach (string str in FileRows)
-            {
-                if (countryRegEx.IsMatch(str))
-                {
-                    for(int i=0;i< countries.Count;i++)
-                    {
-                        if(str==countries[i])
-                        {
-                            duplicate = true;
-                            break;
-                        }
-                    }
-                    if(duplicate==false)
-                    {
-                        countries.Add(str.Remove(0, 8));
-                        comboBoxCountries.Items.Add(str.Remove(0, 8));
-                    }
-                    duplicate = false;
-                }
-            }
+            SE1.FindAllCountries(FileRows);
+            labelCountries.Text = SE1.Countries.Count.ToString();
+            ListBoxCountries.Items.AddRange( SE1.Countries.ToArray());
+        }
+
+        public void FindAllProvinces(string[] FileRows)
+        {
+            labelProvs.Text = SE1.Provs.Count.ToString();
+            ListBoxCountries.Items.AddRange(SE1.Provs.ToArray());
         }
 
         private void OpenFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileDialog = new OpenFileDialog();
             fileDialog.ShowDialog();
+
+            labelLoadedFile.Text = fileDialog.FileName;
+
             string SourceFile = File.ReadAllText(fileDialog.FileName);
             string[] FileRows = SourceFile.Split('\n');
-            label1.Text = FileRows.Length.ToString();
-            labelLoadedFile.Text = fileDialog.FileName;
+            
+            
             FindAllCountries(FileRows);
+            FindAllProvinces(FileRows);
         }
     }
 }

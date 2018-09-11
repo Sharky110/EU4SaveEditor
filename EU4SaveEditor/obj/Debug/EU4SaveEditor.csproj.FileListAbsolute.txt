@@ -7,3 +7,13 @@ c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEdit
 c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.CoreCompileInputs.cache
 c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.exe
 c:\users\sharf-ps\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.pdb
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\bin\Debug\EU4SaveEditor.exe.config
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\bin\Debug\EU4SaveEditor.exe
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\bin\Debug\EU4SaveEditor.pdb
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.csprojAssemblyReference.cache
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.Form1.resources
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.Properties.Resources.resources
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.GenerateResource.cache
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.CoreCompileInputs.cache
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.exe
+C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.pdb
