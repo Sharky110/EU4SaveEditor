@@ -6,9 +6,9 @@ namespace EU4SaveEditor
 {
     class SearchEngine
     {
-        bool duplicate = false;
+        static bool duplicate = false;
 
-        public void FindAllCountries(string[] FileRows, ref List<Country> Countries)
+        public static void FindAllCountries(string[] FileRows, ref List<Country> Countries)
         {
             string CountryName;
             Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
@@ -37,9 +37,10 @@ namespace EU4SaveEditor
             }
         }
 
-        public void FindAllProvinces(string[] FileRows, ref List<Province> Provinces, List<Country> Countries)
+        public static void FindAllProvinces(string[] FileRows, ref List<Province> Provinces, List<Country> Countries)
         {
             string ProvinceName;
+            int OwnerId = 0;
             Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]{0,}\"$", RegexOptions.Singleline);
             int index = 1;
             foreach (string str in FileRows)
@@ -47,7 +48,6 @@ namespace EU4SaveEditor
                 if (ProvRegEx.IsMatch(str))
                 {
                     ProvinceName = str.Split('\"')[1];
-                    //strCountry = strCountry.Remove(3);
                     for (int i = 0; i < Provinces.Count; i++)
                     {
                         if (ProvinceName == Provinces[i].Name)
@@ -58,10 +58,18 @@ namespace EU4SaveEditor
                     }
                     if (duplicate == false)
                     {
-                        string id = SetCountryId(index, FileRows[index], Countries);
-                        if (id != "Not Province")
+                        string OwnerName = SetCountryForProvince(index, FileRows[index]);
+                        if (OwnerName != "Not Province")
                         {
-                            Provinces.Add(new Province(ProvinceName, index, id));
+                            for(int i =0; i<Countries.Count; i++)
+                            {
+                                if(Countries[i].Name == OwnerName)
+                                {
+                                    OwnerId = Countries[i].Id;
+                                    break;
+                                }
+                            }
+                            Provinces.Add(new Province(ProvinceName, index, OwnerName, OwnerId));
                         }
                     }
                     duplicate = false;
@@ -70,7 +78,7 @@ namespace EU4SaveEditor
             }
         }
 
-        public string SetCountryId(int index, string targetString, List<Country> Countries)
+        public static string SetCountryForProvince(int index, string targetString)
         {
             string CountryName = "Not Province";
             Regex countryRegEx = new Regex("owner=\"[A-Z]{3}\"");
@@ -86,25 +94,28 @@ namespace EU4SaveEditor
             return CountryName;
         }
 
-        public void FindProvinceProsperity(string[] FileRows, int index, Province province)
+        public static void FindProvinceParameters(string[] FileRows, int index, Province province)
         {
             Regex RegExTax = new Regex("base_tax=");
             Regex RegExProd = new Regex("base_production=");
             Regex RegExManPow = new Regex("base_manpower=");
             List<string> ProvinceInfo = new List<string>();
-            for (int i = index; i < index + 40; i++)
+            for (int i = index; i < index + 50; i++)
             {
                 if (RegExTax.IsMatch(FileRows[i]))
                 {
                     province.Tax = FileRows[i].Split('=')[1];
+                    province.TaxId = i;
                 }
                 if (RegExProd.IsMatch(FileRows[i]))
                 {
                     province.Prod = FileRows[i].Split('=')[1];
+                    province.ProdId = i;
                 }
                 if (RegExManPow.IsMatch(FileRows[i]))
                 {
                     province.ManPow = FileRows[i].Split('=')[1];
+                    province.ManPowId = i;
                 }
             }
         }

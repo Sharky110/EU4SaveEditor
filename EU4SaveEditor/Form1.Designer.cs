@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.OpenFileButton = new System.Windows.Forms.Button();
-            this.labelCountries = new System.Windows.Forms.Label();
-            this.labelProvs = new System.Windows.Forms.Label();
             this.labelChooseCountry = new System.Windows.Forms.Label();
             this.labelLoadedFile = new System.Windows.Forms.Label();
             this.ListBoxCountries = new System.Windows.Forms.ListBox();
@@ -39,42 +36,20 @@
             this.labelCountriesCount = new System.Windows.Forms.Label();
             this.labelProvincesCount = new System.Windows.Forms.Label();
             this.groupBoxProvinceProsperity = new System.Windows.Forms.GroupBox();
-            this.labelAdministrative = new System.Windows.Forms.Label();
-            this.labelMilitary = new System.Windows.Forms.Label();
-            this.labelDiplomacy = new System.Windows.Forms.Label();
-            this.textBoxMil = new System.Windows.Forms.TextBox();
-            this.textBoxAdm = new System.Windows.Forms.TextBox();
             this.textBoxDip = new System.Windows.Forms.TextBox();
+            this.textBoxAdm = new System.Windows.Forms.TextBox();
+            this.textBoxMil = new System.Windows.Forms.TextBox();
+            this.labelDiplomacy = new System.Windows.Forms.Label();
+            this.labelMilitary = new System.Windows.Forms.Label();
+            this.labelAdministrative = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxProvinceProsperity.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // OpenFileButton
-            // 
-            this.OpenFileButton.Location = new System.Drawing.Point(12, 12);
-            this.OpenFileButton.Name = "OpenFileButton";
-            this.OpenFileButton.Size = new System.Drawing.Size(205, 23);
-            this.OpenFileButton.TabIndex = 1;
-            this.OpenFileButton.Text = "Open File";
-            this.OpenFileButton.UseVisualStyleBackColor = true;
-            this.OpenFileButton.Click += new System.EventHandler(this.OpenFileButton_Click);
-            // 
-            // labelCountries
-            // 
-            this.labelCountries.AutoSize = true;
-            this.labelCountries.Location = new System.Drawing.Point(699, 12);
-            this.labelCountries.Name = "labelCountries";
-            this.labelCountries.Size = new System.Drawing.Size(73, 13);
-            this.labelCountries.TabIndex = 3;
-            this.labelCountries.Text = "labelCountries";
-            // 
-            // labelProvs
-            // 
-            this.labelProvs.AutoSize = true;
-            this.labelProvs.Location = new System.Drawing.Point(716, 25);
-            this.labelProvs.Name = "labelProvs";
-            this.labelProvs.Size = new System.Drawing.Size(56, 13);
-            this.labelProvs.TabIndex = 4;
-            this.labelProvs.Text = "labelProvs";
             // 
             // labelChooseCountry
             // 
@@ -108,7 +83,6 @@
             this.ListBoxProvinces.FormattingEnabled = true;
             this.ListBoxProvinces.Location = new System.Drawing.Point(226, 90);
             this.ListBoxProvinces.Name = "ListBoxProvinces";
-            this.ListBoxProvinces.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.ListBoxProvinces.Size = new System.Drawing.Size(205, 342);
             this.ListBoxProvinces.Sorted = true;
             this.ListBoxProvinces.TabIndex = 10;
@@ -158,23 +132,29 @@
             this.groupBoxProvinceProsperity.TabStop = false;
             this.groupBoxProvinceProsperity.Text = "Province prosperity";
             // 
-            // labelAdministrative
+            // textBoxDip
             // 
-            this.labelAdministrative.Location = new System.Drawing.Point(5, 15);
-            this.labelAdministrative.Name = "labelAdministrative";
-            this.labelAdministrative.Size = new System.Drawing.Size(75, 25);
-            this.labelAdministrative.TabIndex = 15;
-            this.labelAdministrative.Text = "Base\r\nTax";
-            this.labelAdministrative.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.textBoxDip.Location = new System.Drawing.Point(87, 63);
+            this.textBoxDip.Name = "textBoxDip";
+            this.textBoxDip.Size = new System.Drawing.Size(75, 20);
+            this.textBoxDip.TabIndex = 20;
+            this.textBoxDip.TextChanged += new System.EventHandler(this.textBoxDip_TextChanged);
             // 
-            // labelMilitary
+            // textBoxAdm
             // 
-            this.labelMilitary.Location = new System.Drawing.Point(5, 105);
-            this.labelMilitary.Name = "labelMilitary";
-            this.labelMilitary.Size = new System.Drawing.Size(75, 25);
-            this.labelMilitary.TabIndex = 16;
-            this.labelMilitary.Text = "Base\r\nManpower";
-            this.labelMilitary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.textBoxAdm.Location = new System.Drawing.Point(87, 19);
+            this.textBoxAdm.Name = "textBoxAdm";
+            this.textBoxAdm.Size = new System.Drawing.Size(75, 20);
+            this.textBoxAdm.TabIndex = 19;
+            this.textBoxAdm.TextChanged += new System.EventHandler(this.textBoxAdm_TextChanged);
+            // 
+            // textBoxMil
+            // 
+            this.textBoxMil.Location = new System.Drawing.Point(87, 108);
+            this.textBoxMil.Name = "textBoxMil";
+            this.textBoxMil.Size = new System.Drawing.Size(75, 20);
+            this.textBoxMil.TabIndex = 18;
+            this.textBoxMil.TextChanged += new System.EventHandler(this.textBoxMil_TextChanged);
             // 
             // labelDiplomacy
             // 
@@ -185,26 +165,63 @@
             this.labelDiplomacy.Text = "Base\r\nProduction";
             this.labelDiplomacy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxMil
+            // labelMilitary
             // 
-            this.textBoxMil.Location = new System.Drawing.Point(87, 108);
-            this.textBoxMil.Name = "textBoxMil";
-            this.textBoxMil.Size = new System.Drawing.Size(75, 20);
-            this.textBoxMil.TabIndex = 18;
+            this.labelMilitary.Location = new System.Drawing.Point(5, 105);
+            this.labelMilitary.Name = "labelMilitary";
+            this.labelMilitary.Size = new System.Drawing.Size(75, 25);
+            this.labelMilitary.TabIndex = 16;
+            this.labelMilitary.Text = "Base\r\nManpower";
+            this.labelMilitary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxAdm
+            // labelAdministrative
             // 
-            this.textBoxAdm.Location = new System.Drawing.Point(87, 19);
-            this.textBoxAdm.Name = "textBoxAdm";
-            this.textBoxAdm.Size = new System.Drawing.Size(75, 20);
-            this.textBoxAdm.TabIndex = 19;
+            this.labelAdministrative.Location = new System.Drawing.Point(5, 15);
+            this.labelAdministrative.Name = "labelAdministrative";
+            this.labelAdministrative.Size = new System.Drawing.Size(75, 25);
+            this.labelAdministrative.TabIndex = 15;
+            this.labelAdministrative.Text = "Base\r\nTax";
+            this.labelAdministrative.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBoxDip
+            // menuStrip1
             // 
-            this.textBoxDip.Location = new System.Drawing.Point(87, 63);
-            this.textBoxDip.Name = "textBoxDip";
-            this.textBoxDip.Size = new System.Drawing.Size(75, 20);
-            this.textBoxDip.TabIndex = 20;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
+            this.menuStrip1.TabIndex = 15;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFileToolStripMenuItem,
+            this.saveFileToolStripMenuItem,
+            this.exitToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // openFileToolStripMenuItem
+            // 
+            this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.openFileToolStripMenuItem.Text = "Open file";
+            this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFile_Click);
+            // 
+            // saveFileToolStripMenuItem
+            // 
+            this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.saveFileToolStripMenuItem.Text = "Save file";
+            this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFile_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
             // 
             // Form1
             // 
@@ -219,22 +236,21 @@
             this.Controls.Add(this.ListBoxCountries);
             this.Controls.Add(this.labelLoadedFile);
             this.Controls.Add(this.labelChooseCountry);
-            this.Controls.Add(this.labelProvs);
-            this.Controls.Add(this.labelCountries);
-            this.Controls.Add(this.OpenFileButton);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Europa Universalis 4 Save Editor";
             this.groupBoxProvinceProsperity.ResumeLayout(false);
             this.groupBoxProvinceProsperity.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button OpenFileButton;
-        private System.Windows.Forms.Label labelCountries;
-        private System.Windows.Forms.Label labelProvs;
         private System.Windows.Forms.Label labelChooseCountry;
         private System.Windows.Forms.Label labelLoadedFile;
         private System.Windows.Forms.ListBox ListBoxCountries;
@@ -249,6 +265,11 @@
         private System.Windows.Forms.Label labelDiplomacy;
         private System.Windows.Forms.Label labelMilitary;
         private System.Windows.Forms.Label labelAdministrative;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
     }
 }
 
