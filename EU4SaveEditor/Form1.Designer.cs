@@ -139,14 +139,17 @@
             this.textBoxDip.Size = new System.Drawing.Size(75, 20);
             this.textBoxDip.TabIndex = 20;
             this.textBoxDip.TextChanged += new System.EventHandler(this.textBoxDip_TextChanged);
+            this.textBoxDip.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // textBoxAdm
             // 
+            this.textBoxAdm.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.textBoxAdm.Location = new System.Drawing.Point(87, 19);
             this.textBoxAdm.Name = "textBoxAdm";
             this.textBoxAdm.Size = new System.Drawing.Size(75, 20);
             this.textBoxAdm.TabIndex = 19;
             this.textBoxAdm.TextChanged += new System.EventHandler(this.textBoxAdm_TextChanged);
+            this.textBoxAdm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // textBoxMil
             // 
@@ -155,6 +158,7 @@
             this.textBoxMil.Size = new System.Drawing.Size(75, 20);
             this.textBoxMil.TabIndex = 18;
             this.textBoxMil.TextChanged += new System.EventHandler(this.textBoxMil_TextChanged);
+            this.textBoxMil.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // labelDiplomacy
             // 
@@ -222,6 +226,7 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // Form1
             // 

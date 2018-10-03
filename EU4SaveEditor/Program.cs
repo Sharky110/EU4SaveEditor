@@ -9,7 +9,7 @@ namespace EU4SaveEditor
     static class Program
     {
         /// <summary>
-        /// Главная точка входа для приложения.
+        /// Europa Universalis 4 Save Editor version 1.0
         /// </summary>
         [STAThread]
         static void Main()

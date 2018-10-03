@@ -39,6 +39,8 @@ namespace EU4SaveEditor
 
         public static void FindAllProvinces(string[] FileRows, ref List<Province> Provinces, List<Country> Countries)
         {
+            //string[] test = new string[50000];
+            //Array.Copy(FileRows,198330,test,0,49000);
             string ProvinceName;
             int OwnerId = 0;
             Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]{0,}\"$", RegexOptions.Singleline);
