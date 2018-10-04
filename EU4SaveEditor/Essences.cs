@@ -10,23 +10,28 @@ namespace EU4SaveEditor
     {
         public Country(string Vname = "Useless", int Vid = 0)
         {
-            Name = Vname;
-            Id = Vid;
+            CountryName = Vname;
+            CountryId = Vid;
         }
 
-        public string Name { get; set; }
-        public int Id { get; set; }
+        public string CountryName { get; set; }
+        public int CountryId { get; set; }
     }
 
-    class Province : Country
+    class Province
     {
-        public Province(string Vname = "Useless", int Vid = 0, string owner = "Useless", int OwnId = 0)
+        public Province(string Vname = "Useless", int Vid = 0, int Vindex = 0, string owner = "Useless", int OwnId = 0)
         {
-            Name = Vname;
-            Id = Vid;
+            ProvinceName = Vname;
+            ProvinceId = Vid;
+            ProvinceIndex = Vindex;
             OwnerName = owner;
             OwnerId = OwnId;
         }
+
+        public string ProvinceName { get; set; }
+        public int ProvinceId { get; set; } //Province position in save file
+        public int ProvinceIndex { get; set; } //Province index
 
         public string OwnerName { get; set; }
         public int OwnerId { get; set; }

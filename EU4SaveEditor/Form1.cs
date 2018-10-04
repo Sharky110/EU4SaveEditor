@@ -15,6 +15,7 @@ namespace EU4SaveEditor
     {
         List<Country> Countries = new List<Country>(1);
         List<Province> Provinces = new List<Province>(1);
+        List<Province> CountryProvinces = new List<Province>(1);
         string[] FileRows;
         bool duplicate = false;
         string FilePath = "";
@@ -58,11 +59,13 @@ namespace EU4SaveEditor
         private void ListBoxCountries_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListBoxProvinces.Items.Clear();
+            CountryProvinces.Clear();
             for (int i = 0; i < Provinces.Count; i++)
             {
                 if ((sender as ListBox).SelectedItem.ToString() == Provinces[i].OwnerName)
                 {
-                    ListBoxProvinces.Items.Add(Provinces[i].Name);
+                    ListBoxProvinces.Items.Add(Provinces[i].ProvinceName);
+                    CountryProvinces.Add(Provinces[i]);
                 }
             }
             labelProvincesCount.Text = ListBoxProvinces.Items.Count.ToString();
@@ -74,15 +77,15 @@ namespace EU4SaveEditor
             {
                 string ProvinceName = (sender as ListBox).SelectedItem.ToString();
 
-                for (int i = 0; i < Provinces.Count; i++)
+                for (int i = 0; i < CountryProvinces.Count; i++)// раньше был province id и count, был правильные id
                 {
-                    if (ProvinceName == Provinces[i].Name)
+                    if (ProvinceName == CountryProvinces[i].ProvinceName)
                     {
-                        SearchEngine.FindProvinceParameters(FileRows, Provinces[i].Id, Provinces[i]);
-                        textBoxAdm.Text = Provinces[i].Tax;
-                        textBoxDip.Text = Provinces[i].Prod;
-                        textBoxMil.Text = Provinces[i].ManPow;
-                        CurrentProvince = i;
+                        SearchEngine.FindProvinceParameters(FileRows, CountryProvinces[i].ProvinceId, CountryProvinces[i]);
+                        textBoxAdm.Text = CountryProvinces[i].Tax;
+                        textBoxDip.Text = CountryProvinces[i].Prod;
+                        textBoxMil.Text = CountryProvinces[i].ManPow;
+                        CurrentProvince = CountryProvinces[i].ProvinceIndex;
                         break;
                     }
                 }

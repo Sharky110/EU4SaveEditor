@@ -21,7 +21,7 @@ namespace EU4SaveEditor
                     CountryName = str.Split('\"')[1];
                     for (int i = 0; i < Countries.Count; i++)
                     {
-                        if (CountryName == Countries[i].Name)
+                        if (CountryName == Countries[i].CountryName)
                         {
                             duplicate = true;
                             break;
@@ -39,10 +39,9 @@ namespace EU4SaveEditor
 
         public static void FindAllProvinces(string[] FileRows, ref List<Province> Provinces, List<Country> Countries)
         {
-            //string[] test = new string[50000];
-            //Array.Copy(FileRows,198330,test,0,49000);
             string ProvinceName;
             int OwnerId = 0;
+            int ProvinceCounter = 0;
             Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]{0,}\"$", RegexOptions.Singleline);
             int index = 1;
             foreach (string str in FileRows)
@@ -52,7 +51,7 @@ namespace EU4SaveEditor
                     ProvinceName = str.Split('\"')[1];
                     for (int i = 0; i < Provinces.Count; i++)
                     {
-                        if (ProvinceName == Provinces[i].Name)
+                        if (ProvinceName == Provinces[i].ProvinceName)
                         {
                             duplicate = true;
                             break;
@@ -63,15 +62,16 @@ namespace EU4SaveEditor
                         string OwnerName = SetCountryForProvince(index, FileRows[index]);
                         if (OwnerName != "Not Province")
                         {
-                            for(int i =0; i<Countries.Count; i++)
+                            for (int i = 0; i < Countries.Count; i++)
                             {
-                                if(Countries[i].Name == OwnerName)
+                                if (Countries[i].CountryName == OwnerName)
                                 {
-                                    OwnerId = Countries[i].Id;
+                                    OwnerId = Countries[i].CountryId;
                                     break;
                                 }
                             }
-                            Provinces.Add(new Province(ProvinceName, index, OwnerName, OwnerId));
+                            Provinces.Add(new Province(ProvinceName, index, ProvinceCounter, OwnerName, OwnerId));
+                            ProvinceCounter++;
                         }
                     }
                     duplicate = false;
@@ -98,22 +98,32 @@ namespace EU4SaveEditor
 
         public static void FindProvinceParameters(string[] FileRows, int index, Province province)
         {
+            int closeId=0;
             Regex RegExTax = new Regex("base_tax=");
             Regex RegExProd = new Regex("base_production=");
             Regex RegExManPow = new Regex("base_manpower=");
             List<string> ProvinceInfo = new List<string>();
-            for (int i = index; i < index + 50; i++)
+            for (int i = index; i < index + 100; i++)
             {
                 if (RegExTax.IsMatch(FileRows[i]))
                 {
                     province.Tax = FileRows[i].Split('=')[1];
                     province.TaxId = i;
+                    closeId = i;
+                    break;
                 }
+            }
+            for (int i = closeId; i < closeId + 10; i++)
+            {
                 if (RegExProd.IsMatch(FileRows[i]))
                 {
                     province.Prod = FileRows[i].Split('=')[1];
                     province.ProdId = i;
+                    break;
                 }
+            }
+            for (int i = closeId; i < closeId + 10; i++)
+            {
                 if (RegExManPow.IsMatch(FileRows[i]))
                 {
                     province.ManPow = FileRows[i].Split('=')[1];
