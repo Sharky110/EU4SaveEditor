@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace EU4SaveEditor
 {
@@ -96,19 +97,20 @@ namespace EU4SaveEditor
             return CountryName;
         }
 
-        public static void FindProvinceParameters(string[] FileRows, int index, Province province)
+        public static void FindProvinceParameters(string[] FileRows, ref List<Province> currentProvinces, int currentProv)
         {
+            int StartSearchId = currentProvinces[currentProv].ProvinceId;
             int closeId=0;
             Regex RegExTax = new Regex("base_tax=");
             Regex RegExProd = new Regex("base_production=");
             Regex RegExManPow = new Regex("base_manpower=");
             List<string> ProvinceInfo = new List<string>();
-            for (int i = index; i < index + 100; i++)
+            for (int i = StartSearchId; i < StartSearchId + 100; i++)
             {
                 if (RegExTax.IsMatch(FileRows[i]))
                 {
-                    province.Tax = FileRows[i].Split('=')[1];
-                    province.TaxId = i;
+                    currentProvinces[currentProv].Tax = FileRows[i].Split('=')[1];
+                    currentProvinces[currentProv].TaxId = i;
                     closeId = i;
                     break;
                 }
@@ -117,8 +119,8 @@ namespace EU4SaveEditor
             {
                 if (RegExProd.IsMatch(FileRows[i]))
                 {
-                    province.Prod = FileRows[i].Split('=')[1];
-                    province.ProdId = i;
+                    currentProvinces[currentProv].Prod = FileRows[i].Split('=')[1];
+                    currentProvinces[currentProv].ProdId = i;
                     break;
                 }
             }
@@ -126,8 +128,8 @@ namespace EU4SaveEditor
             {
                 if (RegExManPow.IsMatch(FileRows[i]))
                 {
-                    province.ManPow = FileRows[i].Split('=')[1];
-                    province.ManPowId = i;
+                    currentProvinces[currentProv].ManPow = FileRows[i].Split('=')[1];
+                    currentProvinces[currentProv].ManPowId = i;
                 }
             }
         }

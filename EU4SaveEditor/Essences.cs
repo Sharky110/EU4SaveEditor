@@ -30,8 +30,8 @@ namespace EU4SaveEditor
         }
 
         public string ProvinceName { get; set; }
-        public int ProvinceId { get; set; } //Province position in save file
-        public int ProvinceIndex { get; set; } //Province index
+        public int ProvinceId { get; set; } //Province position in file
+        public int ProvinceIndex { get; set; } //Province index from 0 to ...
 
         public string OwnerName { get; set; }
         public int OwnerId { get; set; }

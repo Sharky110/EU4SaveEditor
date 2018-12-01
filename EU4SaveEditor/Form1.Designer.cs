@@ -138,7 +138,7 @@
             this.textBoxDip.Name = "textBoxDip";
             this.textBoxDip.Size = new System.Drawing.Size(75, 20);
             this.textBoxDip.TabIndex = 20;
-            this.textBoxDip.TextChanged += new System.EventHandler(this.textBoxDip_TextChanged);
+            this.textBoxDip.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             this.textBoxDip.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // textBoxAdm
@@ -148,7 +148,7 @@
             this.textBoxAdm.Name = "textBoxAdm";
             this.textBoxAdm.Size = new System.Drawing.Size(75, 20);
             this.textBoxAdm.TabIndex = 19;
-            this.textBoxAdm.TextChanged += new System.EventHandler(this.textBoxAdm_TextChanged);
+            this.textBoxAdm.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             this.textBoxAdm.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // textBoxMil
@@ -157,7 +157,7 @@
             this.textBoxMil.Name = "textBoxMil";
             this.textBoxMil.Size = new System.Drawing.Size(75, 20);
             this.textBoxMil.TabIndex = 18;
-            this.textBoxMil.TextChanged += new System.EventHandler(this.textBoxMil_TextChanged);
+            this.textBoxMil.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             this.textBoxMil.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
             // labelDiplomacy

@@ -15,7 +15,7 @@ namespace EU4SaveEditor
     {
         List<Country> Countries = new List<Country>(1);
         List<Province> Provinces = new List<Province>(1);
-        List<Province> CountryProvinces = new List<Province>(1);
+        List<Province> ProvincesOfCountry = new List<Province>(1);
         string[] FileRows;
         bool duplicate = false;
         string FilePath = "";
@@ -59,13 +59,13 @@ namespace EU4SaveEditor
         private void ListBoxCountries_SelectedIndexChanged(object sender, EventArgs e)
         {
             ListBoxProvinces.Items.Clear();
-            CountryProvinces.Clear();
+            ProvincesOfCountry.Clear();
             for (int i = 0; i < Provinces.Count; i++)
             {
                 if ((sender as ListBox).SelectedItem.ToString() == Provinces[i].OwnerName)
                 {
                     ListBoxProvinces.Items.Add(Provinces[i].ProvinceName);
-                    CountryProvinces.Add(Provinces[i]);
+                    ProvincesOfCountry.Add(Provinces[i]);
                 }
             }
             labelProvincesCount.Text = ListBoxProvinces.Items.Count.ToString();
@@ -76,16 +76,17 @@ namespace EU4SaveEditor
             if ((sender as ListBox).SelectedItem != null)
             {
                 string ProvinceName = (sender as ListBox).SelectedItem.ToString();
-
-                for (int i = 0; i < CountryProvinces.Count; i++)// раньше был province id и count, был правильные id
+                for (int currentProv = 0; currentProv < ProvincesOfCountry.Count; currentProv++)// раньше был province id и count, был правильные id
                 {
-                    if (ProvinceName == CountryProvinces[i].ProvinceName)
+                    if (ProvinceName == ProvincesOfCountry[currentProv].ProvinceName)
                     {
-                        SearchEngine.FindProvinceParameters(FileRows, CountryProvinces[i].ProvinceId, CountryProvinces[i]);
-                        textBoxAdm.Text = CountryProvinces[i].Tax;
-                        textBoxDip.Text = CountryProvinces[i].Prod;
-                        textBoxMil.Text = CountryProvinces[i].ManPow;
-                        CurrentProvince = CountryProvinces[i].ProvinceIndex;
+
+                        SearchEngine.FindProvinceParameters(FileRows, ref ProvincesOfCountry, currentProv);
+                        CurrentProvince = ProvincesOfCountry[currentProv].ProvinceIndex;
+                        textBoxAdm.Text = ProvincesOfCountry[currentProv].Tax;
+                        textBoxDip.Text = ProvincesOfCountry[currentProv].Prod;
+                        textBoxMil.Text = ProvincesOfCountry[currentProv].ManPow;
+                        
                         break;
                     }
                 }
@@ -94,7 +95,6 @@ namespace EU4SaveEditor
 
         private void openFile_Click(object sender, EventArgs e)
         {
-            
             OpenFileDialog OpenFile = new OpenFileDialog();
             OpenFile.Filter = "Europa Universalis 4 save (*.eu4)|*.eu4";
             OpenFile.ShowDialog();
@@ -135,27 +135,24 @@ namespace EU4SaveEditor
             }
         }
 
-        private void textBoxAdm_TextChanged(object sender, EventArgs e)
+        private void textBox_TextChanged(object sender, EventArgs e)
         {
-            if (FilePath != string.Empty && Provinces[CurrentProvince].TaxId != 0)
+            if (FilePath != string.Empty)
             {
-                FileRows[Provinces[CurrentProvince].TaxId] = "		base_tax=" + textBoxAdm.Text;
-            }
-        }
-
-        private void textBoxDip_TextChanged(object sender, EventArgs e)
-        {
-            if (FilePath != string.Empty && Provinces[CurrentProvince].ProdId != 0)
-            {
-                FileRows[Provinces[CurrentProvince].ProdId] = "		base_production=" + textBoxDip.Text;
-            }
-        }
-
-        private void textBoxMil_TextChanged(object sender, EventArgs e)
-        {
-            if (FilePath != string.Empty && Provinces[CurrentProvince].ManPowId != 0)
-            {
-                FileRows[Provinces[CurrentProvince].ManPowId] = "		base_manpower=" + textBoxMil.Text;
+                switch ((sender as TextBox).Name)
+                {
+                    case "textBoxAdm":
+                        FileRows[Provinces[CurrentProvince].TaxId] = "    base_tax=" + textBoxAdm.Text;
+                        break;
+                    case "textBoxDip":
+                        FileRows[Provinces[CurrentProvince].ProdId] = "    base_production=" + textBoxDip.Text;
+                        break;
+                    case "textBoxMil":
+                        FileRows[Provinces[CurrentProvince].ManPowId] = "    base_manpower=" + textBoxMil.Text;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
