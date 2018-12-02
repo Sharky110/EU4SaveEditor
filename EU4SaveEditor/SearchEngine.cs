@@ -43,7 +43,7 @@ namespace EU4SaveEditor
             string ProvinceName;
             int OwnerId = 0;
             int ProvinceCounter = 0;
-            Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]{0,}\"$", RegexOptions.Singleline);
+            Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]*"+@"\s"+"*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
             int index = 1;
             foreach (string str in FileRows)
             {
