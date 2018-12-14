@@ -17,3 +17,4 @@ C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4Sav
 C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.csproj.CoreCompileInputs.cache
 C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.exe
 C:\Users\s.ilyasov\Downloads\EU4SaveEditor-master(1)\EU4SaveEditor-master\EU4SaveEditor\obj\Debug\EU4SaveEditor.pdb
+C:\Users\Sharf-PS\source\repos\EU4SaveEditor\EU4SaveEditor\obj\Debug\EU4SaveEditor.csprojAssemblyReference.cache

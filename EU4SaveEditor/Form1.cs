@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
@@ -13,161 +7,56 @@ namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
-        List<Country> Countries = new List<Country>(1);
-        List<Province> Provinces = new List<Province>(1);
-        List<Province> ProvincesOfCountry = new List<Province>(1);
-        string[] FileRows;
-        bool duplicate = false;
-        string FilePath = "";
-        int CurrentProvince = 0;
+        SearchEngine searchEngine = new SearchEngine();
 
         public Form1()
         {
             InitializeComponent();
         }
 
-        public void FindAllCountries(string[] FileRows)
-        {
-            Countries.Clear();
-            ListBoxCountries.Items.Clear();
-            SearchEngine.FindAllCountries(FileRows, ref Countries);
-        }
-
-        public void FindAllProvinces(string[] FileRows)
-        {
-            Provinces.Clear();
-            ListBoxProvinces.Items.Clear();
-            SearchEngine.FindAllProvinces(FileRows, ref Provinces, Countries);
-            for (int i = 0; i < Provinces.Count; i++)
-            {
-                for (int j = 0; j < i; j++)
-                {
-                    if (Provinces[i].OwnerName == Provinces[j].OwnerName)
-                    {
-                        duplicate = true;
-                        break;
-                    }
-                }
-                if (duplicate == false)
-                {
-                    ListBoxCountries.Items.Add(Provinces[i].OwnerName);
-                }
-                duplicate = false;
-            }
-        }
-
         private void ListBoxCountries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ListBoxProvinces.Items.Clear();
-            ProvincesOfCountry.Clear();
-            for (int i = 0; i < Provinces.Count; i++)
-            {
-                if ((sender as ListBox).SelectedItem.ToString() == Provinces[i].OwnerName)
-                {
-                    ListBoxProvinces.Items.Add(Provinces[i].ProvinceName);
-                    ProvincesOfCountry.Add(Provinces[i]);
-                }
-            }
-            labelProvincesCount.Text = ListBoxProvinces.Items.Count.ToString();
+            searchEngine.CountryChanged(lbCountries.SelectedItem.ToString(), ref lbProvinces, ref labelProvincesCount);
         }
 
         private void ListBoxProvinces_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((sender as ListBox).SelectedItem != null)
-            {
-                string ProvinceName = (sender as ListBox).SelectedItem.ToString();
-                for (int currentProv = 0; currentProv < ProvincesOfCountry.Count; currentProv++)// раньше был province id и count, был правильные id
-                {
-                    if (ProvinceName == ProvincesOfCountry[currentProv].ProvinceName)
-                    {
-
-                        SearchEngine.FindProvinceParameters(FileRows, ref ProvincesOfCountry, currentProv);
-                        CurrentProvince = ProvincesOfCountry[currentProv].ProvinceIndex;
-                        textBoxAdm.Text = ProvincesOfCountry[currentProv].Tax;
-                        textBoxDip.Text = ProvincesOfCountry[currentProv].Prod;
-                        textBoxMil.Text = ProvincesOfCountry[currentProv].ManPow;
-                        
-                        break;
-                    }
-                }
-            }
+            searchEngine.ProvinceChanged(ref lbProvinces, ref tbAdm, ref tbDip, ref tbMil);
         }
 
         private void openFile_Click(object sender, EventArgs e)
         {
-            OpenFileDialog OpenFile = new OpenFileDialog();
-            OpenFile.Filter = "Europa Universalis 4 save (*.eu4)|*.eu4";
-            OpenFile.ShowDialog();
-            if (OpenFile.FileName != string.Empty)
-            {
-                FilePath = OpenFile.FileName;
-                labelLoadedFile.Text = OpenFile.FileName;
-                string SourceFile = File.ReadAllText(OpenFile.FileName, Encoding.GetEncoding(1252));
-                FileRows = SourceFile.Split('\n');
-                FindAllCountries(FileRows);
-                FindAllProvinces(FileRows);
-                labelCountriesCount.Text = ListBoxCountries.Items.Count.ToString();
-            }
+            searchEngine.OpenFile(ref lbCountries, ref lbProvinces, ref labelLoadedFile, ref labelCountriesCount);
         }
-        
+
         private void saveFile_Click(object sender, EventArgs e)
         {
-            if (FilePath != string.Empty)
-            {
-                
-                SaveFileDialog SaveFile = new SaveFileDialog();
-                SaveFile.Filter = "Europa Universalis 4 save (*.eu4)|*.eu4";
-                SaveFile.ShowDialog();
-                FileRows.ToString();
-                if (SaveFile.FileName != string.Empty)
-                {
-                    StreamWriter myfile = new StreamWriter(SaveFile.FileName, false, Encoding.GetEncoding(1252));
-                    for (int i=0;i<FileRows.Length;i++)
-                    {
-                        myfile.Write(FileRows[i]+"\n");
-                    }
-                    myfile.Close();
-                }
-            }
-            else
-            {
-                MessageBox.Show("File not opened.","Error!");
-            }
+            searchEngine.SaveFile();
         }
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
-            if (FilePath != string.Empty)
-            {
-                switch ((sender as TextBox).Name)
-                {
-                    case "textBoxAdm":
-                        FileRows[Provinces[CurrentProvince].TaxId] = "    base_tax=" + textBoxAdm.Text;
-                        break;
-                    case "textBoxDip":
-                        FileRows[Provinces[CurrentProvince].ProdId] = "    base_production=" + textBoxDip.Text;
-                        break;
-                    case "textBoxMil":
-                        FileRows[Provinces[CurrentProvince].ManPowId] = "    base_manpower=" + textBoxMil.Text;
-                        break;
-                    default:
-                        break;
-                }
-            }
+            searchEngine.SetPoints(ref sender, lbProvinces);
         }
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            char number = e.KeyChar;
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && number != 8 && number != 46) //цифры, клавиша BackSpace и точка в ASCII
-            {
-                e.Handled = true;
-            }
+            searchEngine.KeyPress(ref e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnSaveFile_Click(object sender, EventArgs e)
+        {
+            searchEngine.SaveFile();
+        }
+
+        private void tbSearchCountry_TextChanged(object sender, EventArgs e)
+        {
+            searchEngine.FindCountry((sender as TextBox).Text, ref lbCountries);
         }
     }
 }
