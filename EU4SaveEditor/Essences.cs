@@ -44,5 +44,11 @@ namespace EU4SaveEditor
 
         public string ManPow { get; set; }
         public int ManPowId { get; set; }
+
+        public string OrigCltr { get; set; }
+        public string Cltr { get; set; }
+
+        public string OrigRlgn { get; set; }
+        public string Rlgn { get; set; }
     }
 }

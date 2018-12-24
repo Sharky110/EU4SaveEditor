@@ -50,6 +50,14 @@
             this.tbSearchCountry = new System.Windows.Forms.TextBox();
             this.btnSaveFile = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.tbOrigCltr = new System.Windows.Forms.TextBox();
+            this.tbCltr = new System.Windows.Forms.TextBox();
+            this.labelOrigCltr = new System.Windows.Forms.Label();
+            this.labelCltr = new System.Windows.Forms.Label();
+            this.labelRlgn = new System.Windows.Forms.Label();
+            this.labelOrigRlgn = new System.Windows.Forms.Label();
+            this.tbRlgn = new System.Windows.Forms.TextBox();
+            this.tbOrigRlgn = new System.Windows.Forms.TextBox();
             this.groupBoxProvinceProsperity.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -215,21 +223,21 @@
             // openFileToolStripMenuItem
             // 
             this.openFileToolStripMenuItem.Name = "openFileToolStripMenuItem";
-            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.openFileToolStripMenuItem.Text = "Open file";
             this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFile_Click);
             // 
             // saveFileToolStripMenuItem
             // 
             this.saveFileToolStripMenuItem.Name = "saveFileToolStripMenuItem";
-            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveFileToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.saveFileToolStripMenuItem.Text = "Save file";
             this.saveFileToolStripMenuItem.Click += new System.EventHandler(this.saveFile_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -263,12 +271,88 @@
             this.label1.TabIndex = 22;
             this.label1.Text = "Search country:";
             // 
+            // tbOrigCltr
+            // 
+            this.tbOrigCltr.Location = new System.Drawing.Point(564, 329);
+            this.tbOrigCltr.Name = "tbOrigCltr";
+            this.tbOrigCltr.ReadOnly = true;
+            this.tbOrigCltr.Size = new System.Drawing.Size(150, 20);
+            this.tbOrigCltr.TabIndex = 21;
+            // 
+            // tbCltr
+            // 
+            this.tbCltr.Location = new System.Drawing.Point(564, 355);
+            this.tbCltr.Name = "tbCltr";
+            this.tbCltr.ReadOnly = true;
+            this.tbCltr.Size = new System.Drawing.Size(150, 20);
+            this.tbCltr.TabIndex = 23;
+            // 
+            // labelOrigCltr
+            // 
+            this.labelOrigCltr.Location = new System.Drawing.Point(477, 329);
+            this.labelOrigCltr.Name = "labelOrigCltr";
+            this.labelOrigCltr.Size = new System.Drawing.Size(80, 20);
+            this.labelOrigCltr.TabIndex = 21;
+            this.labelOrigCltr.Text = "Original Culture";
+            this.labelOrigCltr.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelCltr
+            // 
+            this.labelCltr.Location = new System.Drawing.Point(482, 355);
+            this.labelCltr.Name = "labelCltr";
+            this.labelCltr.Size = new System.Drawing.Size(75, 20);
+            this.labelCltr.TabIndex = 24;
+            this.labelCltr.Text = "Culture";
+            this.labelCltr.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelRlgn
+            // 
+            this.labelRlgn.Location = new System.Drawing.Point(482, 417);
+            this.labelRlgn.Name = "labelRlgn";
+            this.labelRlgn.Size = new System.Drawing.Size(75, 20);
+            this.labelRlgn.TabIndex = 28;
+            this.labelRlgn.Text = "Religion";
+            this.labelRlgn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelOrigRlgn
+            // 
+            this.labelOrigRlgn.Location = new System.Drawing.Point(468, 391);
+            this.labelOrigRlgn.Name = "labelOrigRlgn";
+            this.labelOrigRlgn.Size = new System.Drawing.Size(89, 20);
+            this.labelOrigRlgn.TabIndex = 25;
+            this.labelOrigRlgn.Text = "Original Religion";
+            this.labelOrigRlgn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tbRlgn
+            // 
+            this.tbRlgn.Location = new System.Drawing.Point(564, 417);
+            this.tbRlgn.Name = "tbRlgn";
+            this.tbRlgn.ReadOnly = true;
+            this.tbRlgn.Size = new System.Drawing.Size(150, 20);
+            this.tbRlgn.TabIndex = 27;
+            // 
+            // tbOrigRlgn
+            // 
+            this.tbOrigRlgn.Location = new System.Drawing.Point(564, 391);
+            this.tbOrigRlgn.Name = "tbOrigRlgn";
+            this.tbOrigRlgn.ReadOnly = true;
+            this.tbOrigRlgn.Size = new System.Drawing.Size(150, 20);
+            this.tbOrigRlgn.TabIndex = 26;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(784, 446);
+            this.Controls.Add(this.labelRlgn);
+            this.Controls.Add(this.labelOrigRlgn);
+            this.Controls.Add(this.tbRlgn);
+            this.Controls.Add(this.tbOrigRlgn);
+            this.Controls.Add(this.labelCltr);
+            this.Controls.Add(this.labelOrigCltr);
+            this.Controls.Add(this.tbCltr);
+            this.Controls.Add(this.tbOrigCltr);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSaveFile);
             this.Controls.Add(this.tbSearchCountry);
@@ -318,6 +402,14 @@
         private System.Windows.Forms.TextBox tbSearchCountry;
         private System.Windows.Forms.Button btnSaveFile;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbOrigCltr;
+        private System.Windows.Forms.TextBox tbCltr;
+        private System.Windows.Forms.Label labelOrigCltr;
+        private System.Windows.Forms.Label labelCltr;
+        private System.Windows.Forms.Label labelRlgn;
+        private System.Windows.Forms.Label labelOrigRlgn;
+        private System.Windows.Forms.TextBox tbRlgn;
+        private System.Windows.Forms.TextBox tbOrigRlgn;
     }
 }
 

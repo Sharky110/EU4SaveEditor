@@ -21,7 +21,7 @@ namespace EU4SaveEditor
 
         private void ListBoxProvinces_SelectedIndexChanged(object sender, EventArgs e)
         {
-            searchEngine.ProvinceChanged(ref lbProvinces, ref tbAdm, ref tbDip, ref tbMil);
+            searchEngine.ProvinceChanged(ref lbProvinces, ref tbAdm, ref tbDip, ref tbMil, ref tbOrigCltr, ref tbCltr, ref tbOrigRlgn, ref tbRlgn);
         }
 
         private void openFile_Click(object sender, EventArgs e)

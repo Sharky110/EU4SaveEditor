@@ -12,28 +12,31 @@ namespace EU4SaveEditor
     {
         #region ----- Объявление переменных -------------------------------------------------------
 
-        public List<Country> Countries;
-        public List<Province> Provinces;
-        public List<Province> ProvincesOfCountry;
+        private List<Country> Countries;
+        private List<Province> Provinces;
+        private List<Province> ProvincesOfCountry;
 
-        public List<int> SelectedProvincesId = new List<int>(1);
+        private List<int> SelectedProvincesId;
 
-        public int CurrentProvince = 0;
+        private int CurrentProvince = 0;
 
+        private string FilePath = string.Empty;
 
-        public string FilePath = string.Empty;
+        private string[] SavedDataFile;
 
-        public string[] SavedDataFile;
-
-        public bool duplicate = false;
+        private bool duplicate = false;
 
         #endregion --------------------------------------------------------------------------------
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SearchEngine()
         {
             Countries = new List<Country>(1);
             Provinces = new List<Province>(1);
             ProvincesOfCountry = new List<Province>(1);
+            SelectedProvincesId = new List<int>(1);
         }
 
         public void FindAllCountries()
@@ -176,6 +179,11 @@ namespace EU4SaveEditor
 
             for (int i = StartSearchId; i < StartSearchId + 100; i++)
             {
+                currentProvinces[currentProv].OrigCltr = SavedDataFile[i].Contains("original_culture") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigCltr;
+                currentProvinces[currentProv].Cltr = SavedDataFile[i].Contains("\tculture") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Cltr;
+                currentProvinces[currentProv].OrigRlgn = SavedDataFile[i].Contains("original_religion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigRlgn;
+                currentProvinces[currentProv].Rlgn = SavedDataFile[i].Contains("\treligion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Rlgn;
+
                 if (RegExTax.IsMatch(SavedDataFile[i]))
                 {
                     currentProvinces[currentProv].Tax = SavedDataFile[i].Split('=')[1];
@@ -225,7 +233,8 @@ namespace EU4SaveEditor
             ProvincesCount.Text = lbProvinces.Items.Count.ToString();
         }
 
-        public void ProvinceChanged(ref ListBox lbProvinces, ref TextBox AdmPoints, ref TextBox DipPoints, ref TextBox MilPoints)
+        public void ProvinceChanged(ref ListBox lbProvinces, ref TextBox AdmPoints, ref TextBox DipPoints, ref TextBox MilPoints,
+                                    ref TextBox OrigCltr, ref TextBox Cltr, ref TextBox OrigRlgn, ref TextBox Rlgn )
         {
             if (lbProvinces.SelectedItems.Count < 2)
             {
@@ -240,6 +249,11 @@ namespace EU4SaveEditor
                         AdmPoints.Text = ProvincesOfCountry[currentProv].Tax;
                         DipPoints.Text = ProvincesOfCountry[currentProv].Prod;
                         MilPoints.Text = ProvincesOfCountry[currentProv].ManPow;
+
+                        OrigCltr.Text = ProvincesOfCountry[currentProv].OrigCltr;
+                        Cltr.Text = ProvincesOfCountry[currentProv].Cltr;
+                        OrigRlgn.Text = ProvincesOfCountry[currentProv].OrigRlgn;
+                        Rlgn.Text = ProvincesOfCountry[currentProv].Rlgn;
 
                         break;
                     }
