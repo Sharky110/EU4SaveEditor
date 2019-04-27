@@ -12,64 +12,56 @@ namespace EU4SaveEditor
     {
         #region ----- Объявление переменных -------------------------------------------------------
 
+        /// <summary>
+        /// Список стран
+        /// </summary>
         private List<Country> Countries;
+
+        /// <summary>
+        /// Список провинций
+        /// </summary>
         private List<Province> Provinces;
+
         private List<Province> ProvincesOfCountry;
 
         private List<int> SelectedProvincesId;
 
-        private int CurrentProvince = 0;
+        private int CurrentProvince;
 
-        private string FilePath = string.Empty;
-
-        private string[] SavedDataFile;
-
-        private bool duplicate = false;
-
-        #endregion --------------------------------------------------------------------------------
+        private string FilePath { get; set; }
 
         /// <summary>
-        /// Constructor
+        /// Массив всех строк в файле сохранения
         /// </summary>
+        private string[] SavedDataFile;
+
+        private bool duplicate;
+
+        #endregion --------------------------------------------------------------------------------
+        
         public SearchEngine()
         {
             Countries = new List<Country>(1);
             Provinces = new List<Province>(1);
             ProvincesOfCountry = new List<Province>(1);
             SelectedProvincesId = new List<int>(1);
+
+            CurrentProvince = 0;
+            duplicate = false;
         }
 
         public void FindAllCountries()
         {
-            int index = 1;
-
-            string CountryName = string.Empty;
-
-            Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
-
-            foreach (string str in SavedDataFile)
-            {
-                if (countryRegEx.IsMatch(str))
-                {
-                    CountryName = str.Split('\"')[1];
-
-                    for (int i = 0; i < Countries.Count; i++)
-                    {
-                        if (CountryName == Countries[i].CountryName)
-                        {
-                            duplicate = true;
-
-                            break;
-                        }
-                    }
-                    if (duplicate == false)
-                    {
-                        Countries.Add(new Country(CountryName, index));
-                    }
-                    duplicate = false;
-                }
-                index++;
-            }
+            Regex CountryRegEx = new Regex("country=\"[A-Z]{3}\"");
+            
+            var f = SavedDataFile.Select((s, i) => new { i, s })
+                                 .Where(t => CountryRegEx.IsMatch(t.s))
+                                 .Select(r => new Country { CountryName = r.s.Split('\"')[1] , CountryId =  r.i + 1})
+                                 .GroupBy(r => r.CountryName)
+                                 .Select(r => r.First())
+                                 .ToList();
+            
+            Countries.AddRange(f);
         }
 
         public void FindAllProvinces(ref ListBox lbCountries)
@@ -84,7 +76,7 @@ namespace EU4SaveEditor
             duplicate = false;
 
             Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]*" + @"\s" + "*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
-
+            
             foreach (string str in SavedDataFile)
             {
                 if (ProvRegEx.IsMatch(str))
@@ -96,7 +88,6 @@ namespace EU4SaveEditor
                         if (ProvinceName == Provinces[i].ProvinceName)
                         {
                             duplicate = true;
-
                             break;
                         }
                     }
@@ -112,7 +103,6 @@ namespace EU4SaveEditor
                                 if (Countries[i].CountryName == OwnerName)
                                 {
                                     OwnerId = Countries[i].CountryId;
-
                                     break;
                                 }
                             }
@@ -140,9 +130,8 @@ namespace EU4SaveEditor
                     }
                 }
                 if (duplicate == false)
-                {
                     lbCountries.Items.Add(Provinces[i].OwnerName);
-                }
+
                 duplicate = false;
             }
         }
@@ -155,14 +144,10 @@ namespace EU4SaveEditor
             Regex countryRegEx2 = new Regex("previ");
 
             if (countryRegEx.IsMatch(targetString))
-            {
                 CountryName = targetString.Split('\"')[1];
-            }
-
-            if (countryRegEx2.IsMatch(targetString))
-            {
+            else if (countryRegEx2.IsMatch(targetString))
                 CountryName = "_No Owner";
-            }
+
             return CountryName;
         }
 
@@ -183,7 +168,7 @@ namespace EU4SaveEditor
                 currentProvinces[currentProv].Cltr = SavedDataFile[i].Contains("\tculture") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Cltr;
                 currentProvinces[currentProv].OrigRlgn = SavedDataFile[i].Contains("original_religion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigRlgn;
                 currentProvinces[currentProv].Rlgn = SavedDataFile[i].Contains("\treligion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Rlgn;
-
+                
                 if (RegExTax.IsMatch(SavedDataFile[i]))
                 {
                     currentProvinces[currentProv].Tax = SavedDataFile[i].Split('=')[1];
@@ -233,8 +218,8 @@ namespace EU4SaveEditor
             ProvincesCount.Text = lbProvinces.Items.Count.ToString();
         }
 
-        public void ProvinceChanged(ref ListBox lbProvinces, ref TextBox AdmPoints, ref TextBox DipPoints, ref TextBox MilPoints,
-                                    ref TextBox OrigCltr, ref TextBox Cltr, ref TextBox OrigRlgn, ref TextBox Rlgn )
+        public void ProvinceChanged(ref ListBox lbProvinces, ref GroupBox gbProvProsp, ref TextBox OrigCltr, 
+                                    ref TextBox Cltr, ref TextBox OrigRlgn, ref TextBox Rlgn  )
         {
             if (lbProvinces.SelectedItems.Count < 2)
             {
@@ -246,9 +231,9 @@ namespace EU4SaveEditor
 
                         CurrentProvince = ProvincesOfCountry[currentProv].ProvinceIndex;
 
-                        AdmPoints.Text = ProvincesOfCountry[currentProv].Tax;
-                        DipPoints.Text = ProvincesOfCountry[currentProv].Prod;
-                        MilPoints.Text = ProvincesOfCountry[currentProv].ManPow;
+                        (gbProvProsp.Controls["tbAdm"] as TextBox).Text = ProvincesOfCountry[currentProv].Tax;
+                        (gbProvProsp.Controls["tbDip"] as TextBox).Text = ProvincesOfCountry[currentProv].Prod;
+                        (gbProvProsp.Controls["tbMil"] as TextBox).Text = ProvincesOfCountry[currentProv].ManPow;
 
                         OrigCltr.Text = ProvincesOfCountry[currentProv].OrigCltr;
                         Cltr.Text = ProvincesOfCountry[currentProv].Cltr;

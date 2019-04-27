@@ -35,13 +35,13 @@
             this.labelChooseProvince = new System.Windows.Forms.Label();
             this.labelCountriesCount = new System.Windows.Forms.Label();
             this.labelProvincesCount = new System.Windows.Forms.Label();
-            this.groupBoxProvinceProsperity = new System.Windows.Forms.GroupBox();
+            this.gbProvProsp = new System.Windows.Forms.GroupBox();
             this.tbDip = new System.Windows.Forms.TextBox();
             this.tbAdm = new System.Windows.Forms.TextBox();
             this.tbMil = new System.Windows.Forms.TextBox();
-            this.labelDiplomacy = new System.Windows.Forms.Label();
-            this.labelMilitary = new System.Windows.Forms.Label();
-            this.labelAdministrative = new System.Windows.Forms.Label();
+            this.lblDip = new System.Windows.Forms.Label();
+            this.lblMil = new System.Windows.Forms.Label();
+            this.lblAdm = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,7 +58,7 @@
             this.labelOrigRlgn = new System.Windows.Forms.Label();
             this.tbRlgn = new System.Windows.Forms.TextBox();
             this.tbOrigRlgn = new System.Windows.Forms.TextBox();
-            this.groupBoxProvinceProsperity.SuspendLayout();
+            this.gbProvProsp.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,20 +130,20 @@
             this.labelProvincesCount.Text = "ProvincesCount";
             this.labelProvincesCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // groupBoxProvinceProsperity
+            // gbProvProsp
             // 
-            this.groupBoxProvinceProsperity.Controls.Add(this.tbDip);
-            this.groupBoxProvinceProsperity.Controls.Add(this.tbAdm);
-            this.groupBoxProvinceProsperity.Controls.Add(this.tbMil);
-            this.groupBoxProvinceProsperity.Controls.Add(this.labelDiplomacy);
-            this.groupBoxProvinceProsperity.Controls.Add(this.labelMilitary);
-            this.groupBoxProvinceProsperity.Controls.Add(this.labelAdministrative);
-            this.groupBoxProvinceProsperity.Location = new System.Drawing.Point(477, 101);
-            this.groupBoxProvinceProsperity.Name = "groupBoxProvinceProsperity";
-            this.groupBoxProvinceProsperity.Size = new System.Drawing.Size(177, 140);
-            this.groupBoxProvinceProsperity.TabIndex = 14;
-            this.groupBoxProvinceProsperity.TabStop = false;
-            this.groupBoxProvinceProsperity.Text = "Province prosperity";
+            this.gbProvProsp.Controls.Add(this.tbDip);
+            this.gbProvProsp.Controls.Add(this.tbAdm);
+            this.gbProvProsp.Controls.Add(this.tbMil);
+            this.gbProvProsp.Controls.Add(this.lblDip);
+            this.gbProvProsp.Controls.Add(this.lblMil);
+            this.gbProvProsp.Controls.Add(this.lblAdm);
+            this.gbProvProsp.Location = new System.Drawing.Point(477, 101);
+            this.gbProvProsp.Name = "gbProvProsp";
+            this.gbProvProsp.Size = new System.Drawing.Size(177, 140);
+            this.gbProvProsp.TabIndex = 14;
+            this.gbProvProsp.TabStop = false;
+            this.gbProvProsp.Text = "Province prosperity";
             // 
             // tbDip
             // 
@@ -173,32 +173,32 @@
             this.tbMil.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             this.tbMil.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_KeyPress);
             // 
-            // labelDiplomacy
+            // lblDip
             // 
-            this.labelDiplomacy.Location = new System.Drawing.Point(5, 60);
-            this.labelDiplomacy.Name = "labelDiplomacy";
-            this.labelDiplomacy.Size = new System.Drawing.Size(75, 25);
-            this.labelDiplomacy.TabIndex = 17;
-            this.labelDiplomacy.Text = "Base\r\nProduction";
-            this.labelDiplomacy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblDip.Location = new System.Drawing.Point(5, 60);
+            this.lblDip.Name = "lblDip";
+            this.lblDip.Size = new System.Drawing.Size(75, 25);
+            this.lblDip.TabIndex = 17;
+            this.lblDip.Text = "Base\r\nProduction";
+            this.lblDip.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelMilitary
+            // lblMil
             // 
-            this.labelMilitary.Location = new System.Drawing.Point(5, 105);
-            this.labelMilitary.Name = "labelMilitary";
-            this.labelMilitary.Size = new System.Drawing.Size(75, 25);
-            this.labelMilitary.TabIndex = 16;
-            this.labelMilitary.Text = "Base\r\nManpower";
-            this.labelMilitary.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblMil.Location = new System.Drawing.Point(5, 105);
+            this.lblMil.Name = "lblMil";
+            this.lblMil.Size = new System.Drawing.Size(75, 25);
+            this.lblMil.TabIndex = 16;
+            this.lblMil.Text = "Base\r\nManpower";
+            this.lblMil.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelAdministrative
+            // lblAdm
             // 
-            this.labelAdministrative.Location = new System.Drawing.Point(5, 15);
-            this.labelAdministrative.Name = "labelAdministrative";
-            this.labelAdministrative.Size = new System.Drawing.Size(75, 25);
-            this.labelAdministrative.TabIndex = 15;
-            this.labelAdministrative.Text = "Base\r\nTax";
-            this.labelAdministrative.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblAdm.Location = new System.Drawing.Point(5, 15);
+            this.lblAdm.Name = "lblAdm";
+            this.lblAdm.Size = new System.Drawing.Size(75, 25);
+            this.lblAdm.TabIndex = 15;
+            this.lblAdm.Text = "Base\r\nTax";
+            this.lblAdm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // menuStrip1
             // 
@@ -356,7 +356,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSaveFile);
             this.Controls.Add(this.tbSearchCountry);
-            this.Controls.Add(this.groupBoxProvinceProsperity);
+            this.Controls.Add(this.gbProvProsp);
             this.Controls.Add(this.labelProvincesCount);
             this.Controls.Add(this.labelCountriesCount);
             this.Controls.Add(this.lbProvinces);
@@ -370,8 +370,8 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Europa Universalis 4 Save Editor";
-            this.groupBoxProvinceProsperity.ResumeLayout(false);
-            this.groupBoxProvinceProsperity.PerformLayout();
+            this.gbProvProsp.ResumeLayout(false);
+            this.gbProvProsp.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -387,13 +387,13 @@
         private System.Windows.Forms.Label labelChooseProvince;
         private System.Windows.Forms.Label labelCountriesCount;
         private System.Windows.Forms.Label labelProvincesCount;
-        private System.Windows.Forms.GroupBox groupBoxProvinceProsperity;
+        private System.Windows.Forms.GroupBox gbProvProsp;
         private System.Windows.Forms.TextBox tbDip;
         private System.Windows.Forms.TextBox tbAdm;
         private System.Windows.Forms.TextBox tbMil;
-        private System.Windows.Forms.Label labelDiplomacy;
-        private System.Windows.Forms.Label labelMilitary;
-        private System.Windows.Forms.Label labelAdministrative;
+        private System.Windows.Forms.Label lblDip;
+        private System.Windows.Forms.Label lblMil;
+        private System.Windows.Forms.Label lblAdm;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileToolStripMenuItem;
