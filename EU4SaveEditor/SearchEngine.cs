@@ -54,14 +54,14 @@ namespace EU4SaveEditor
         {
             Regex CountryRegEx = new Regex("country=\"[A-Z]{3}\"");
             
-            var f = SavedDataFile.Select((s, i) => new { i, s })
-                                 .Where(t => CountryRegEx.IsMatch(t.s))
-                                 .Select(r => new Country { CountryName = r.s.Split('\"')[1] , CountryId =  r.i + 1})
-                                 .GroupBy(r => r.CountryName)
-                                 .Select(r => r.First())
-                                 .ToList();
+            var Countries = SavedDataFile.Select((s, i) => new { i, s })
+                                .Where(t => CountryRegEx.IsMatch(t.s))
+                                .Select(r => new Country { CountryName = r.s.Split('\"')[1] , CountryId =  r.i + 1})
+                                .GroupBy(r => r.CountryName)
+                                .Select(r => r.First())
+                                .ToList();
             
-            Countries.AddRange(f);
+            this.Countries.AddRange(Countries);
         }
 
         public void FindAllProvinces(ref ListBox lbCountries)
@@ -73,7 +73,7 @@ namespace EU4SaveEditor
             string ProvinceName = string.Empty;
             string OwnerName = string.Empty;
 
-            duplicate = false;
+            bool isProvinceAlreadyExists;
 
             Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]*" + @"\s" + "*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
             
@@ -83,16 +83,11 @@ namespace EU4SaveEditor
                 {
                     ProvinceName = str.Split('\"')[1];
 
-                    for (int i = 0; i < Provinces.Count; i++)
-                    {
-                        if (ProvinceName == Provinces[i].ProvinceName)
-                        {
-                            duplicate = true;
-                            break;
-                        }
-                    }
-
-                    if (duplicate == false)
+                    isProvinceAlreadyExists = Provinces
+                                                  .Where(p => p.ProvinceName == ProvinceName)
+                                                  .LastOrDefault() != null;
+                    
+                    if (!isProvinceAlreadyExists)
                     {
                         OwnerName = SetCountryForProvince(SavedDataFile[index]);
 
@@ -112,8 +107,6 @@ namespace EU4SaveEditor
                             ProvinceCounter++;
                         }
                     }
-
-                    duplicate = false;
                 }
 
                 index++;
@@ -159,8 +152,6 @@ namespace EU4SaveEditor
             Regex RegExTax = new Regex("base_tax=");
             Regex RegExProd = new Regex("base_production=");
             Regex RegExManPow = new Regex("base_manpower=");
-
-            List<string> ProvinceInfo = new List<string>();
 
             for (int i = StartSearchId; i < StartSearchId + 100; i++)
             {
@@ -250,11 +241,12 @@ namespace EU4SaveEditor
             }
         }
 
-        public void OpenFile(ref ListBox lbCountries, ref ListBox lbProvinces, ref Label LoadedFile, ref Label CountriesCount)
+        public void OpenFile(ref ListBox lbCountries, ref ListBox lbProvinces, ref Label lblLoadedFile, ref Label lblCountriesCount)
         {
-            OpenFileDialog OpenFile = new OpenFileDialog();
-
-            OpenFile.Filter = "Europa Universalis 4 save (*.eu4)|*.eu4";
+            OpenFileDialog OpenFile = new OpenFileDialog
+            {
+                Filter = "Europa Universalis 4 save (*.eu4)|*.eu4"
+            };
 
             OpenFile.ShowDialog();
 
@@ -262,7 +254,7 @@ namespace EU4SaveEditor
             {
                 FilePath = OpenFile.FileName;
 
-                LoadedFile.Text = OpenFile.FileName;
+                lblLoadedFile.Text = OpenFile.FileName;
 
                 string SourceFile = File.ReadAllText(OpenFile.FileName, Encoding.GetEncoding(1252));
 
@@ -277,7 +269,7 @@ namespace EU4SaveEditor
                 FindAllCountries();
                 FindAllProvinces(ref lbCountries);
 
-                CountriesCount.Text = lbCountries.Items.Count.ToString();
+                lblCountriesCount.Text = lbCountries.Items.Count.ToString();
             }
         }
 
@@ -285,9 +277,10 @@ namespace EU4SaveEditor
         {
             if (FilePath != string.Empty)
             {
-                SaveFileDialog SaveFile = new SaveFileDialog();
-
-                SaveFile.Filter = "Europa Universalis 4 save (*.eu4)|*.eu4";
+                SaveFileDialog SaveFile = new SaveFileDialog
+                {
+                    Filter = "Europa Universalis 4 save (*.eu4)|*.eu4"
+                };
 
                 SaveFile.ShowDialog();
 
@@ -375,10 +368,6 @@ namespace EU4SaveEditor
 
         public void FindCountry(string Text, ref ListBox lbCountries)
         {
-            Regex RegExCountry = new Regex("base_tax=");
-
-            List<string> ProvinceInfo = new List<string>();
-
             for (int i = 0; i < lbCountries.Items.Count; i++)
             {
                 if (lbCountries.Items[i].ToString().StartsWith(Text))
