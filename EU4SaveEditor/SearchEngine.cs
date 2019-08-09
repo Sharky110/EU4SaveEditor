@@ -41,10 +41,10 @@ namespace EU4SaveEditor
         
         public SearchEngine()
         {
-            Countries = new List<Country>(1);
-            Provinces = new List<Province>(1);
-            ProvincesOfCountry = new List<Province>(1);
-            SelectedProvincesId = new List<int>(1);
+            Countries = new List<Country>();
+            Provinces = new List<Province>();
+            ProvincesOfCountry = new List<Province>();
+            SelectedProvincesId = new List<int>();
 
             CurrentProvince = 0;
             duplicate = false;
@@ -52,26 +52,26 @@ namespace EU4SaveEditor
 
         public void FindAllCountries()
         {
-            Regex CountryRegEx = new Regex("country=\"[A-Z]{3}\"");
+            Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
             
-            var Countries = SavedDataFile.Select((s, i) => new { i, s })
-                                .Where(t => CountryRegEx.IsMatch(t.s))
+            var countries = SavedDataFile.Select((s, i) => new { i, s })
+                                .Where(t => countryRegEx.IsMatch(t.s))
                                 .Select(r => new Country { CountryName = r.s.Split('\"')[1] , CountryId =  r.i + 1})
                                 .GroupBy(r => r.CountryName)
                                 .Select(r => r.First())
                                 .ToList();
             
-            this.Countries.AddRange(Countries);
+            this.Countries.AddRange(countries);
         }
 
         public void FindAllProvinces(ref ListBox lbCountries)
         {
             int index = 1;
-            int OwnerId = 0;
-            int ProvinceCounter = 0;
+            int ownerId = 0;
+            int provinceCounter = 0;
 
-            string ProvinceName = string.Empty;
-            string OwnerName = string.Empty;
+            string provinceName = string.Empty;
+            string ownerName = string.Empty;
 
             bool isProvinceAlreadyExists;
 
@@ -81,30 +81,30 @@ namespace EU4SaveEditor
             {
                 if (ProvRegEx.IsMatch(str))
                 {
-                    ProvinceName = str.Split('\"')[1];
+                    provinceName = str.Split('\"')[1];
 
                     isProvinceAlreadyExists = Provinces
-                                                  .Where(p => p.ProvinceName == ProvinceName)
+                                                  .Where(p => p.ProvinceName == provinceName)
                                                   .LastOrDefault() != null;
                     
                     if (!isProvinceAlreadyExists)
                     {
-                        OwnerName = SetCountryForProvince(SavedDataFile[index]);
+                        ownerName = SetCountryForProvince(SavedDataFile[index]);
 
-                        if (OwnerName != "Not Province")
+                        if (ownerName != "Not Province")
                         {
                             for (int i = 0; i < Countries.Count; i++)
                             {
-                                if (Countries[i].CountryName == OwnerName)
+                                if (Countries[i].CountryName == ownerName)
                                 {
-                                    OwnerId = Countries[i].CountryId;
+                                    ownerId = Countries[i].CountryId;
                                     break;
                                 }
                             }
 
-                            Provinces.Add(new Province(ProvinceName, index, ProvinceCounter, OwnerName, OwnerId));
+                            Provinces.Add(new Province(provinceName, index, provinceCounter, ownerName, ownerId));
 
-                            ProvinceCounter++;
+                            provinceCounter++;
                         }
                     }
                 }
@@ -131,17 +131,17 @@ namespace EU4SaveEditor
 
         public string SetCountryForProvince(string targetString)
         {
-            string CountryName = "Not Province";
+            string countryName = "Not Province";
 
             Regex countryRegEx = new Regex("owner=\"[A-Z]{3}\"");
             Regex countryRegEx2 = new Regex("previ");
 
             if (countryRegEx.IsMatch(targetString))
-                CountryName = targetString.Split('\"')[1];
+                countryName = targetString.Split('\"')[1];
             else if (countryRegEx2.IsMatch(targetString))
-                CountryName = "_No Owner";
+                countryName = "_No Owner";
 
-            return CountryName;
+            return countryName;
         }
 
         public void FindProvinceParameters(ref List<Province> currentProvinces, int currentProv)
@@ -359,8 +359,7 @@ namespace EU4SaveEditor
 
         public void KeyPress(ref KeyPressEventArgs e)
         {
-            char number = e.KeyChar;
-            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && number != 8 && number != 46) //цифры, клавиша BackSpace и точка в ASCII
+            if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 46) //цифры, клавиша BackSpace и точка в ASCII
             {
                 e.Handled = true;
             }
