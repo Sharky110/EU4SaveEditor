@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EU4SaveEditor
+﻿namespace EU4SaveEditor
 {
     class Country
     {
-        public Country(string Vname = "Useless", int Vid = 0)
+        public Country(string vName = "Useless", int vId = 0)
         {
-            CountryName = Vname;
-            CountryId = Vid;
+            CountryName = vName;
+            CountryId = vId;
         }
 
         public string CountryName { get; set; }
@@ -20,13 +14,13 @@ namespace EU4SaveEditor
 
     class Province
     {
-        public Province(string Vname = "Useless", int Vid = 0, int Vindex = 0, string owner = "Useless", int OwnId = 0)
+        public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless", int ownId = 0)
         {
-            ProvinceName = Vname;
-            ProvinceId = Vid;
-            ProvinceIndex = Vindex;
+            ProvinceName = vName;
+            ProvinceId = vId;
+            ProvinceIndex = vIndex;
             OwnerName = owner;
-            OwnerId = OwnId;
+            OwnerId = ownId;
         }
 
         public string ProvinceName { get; set; }

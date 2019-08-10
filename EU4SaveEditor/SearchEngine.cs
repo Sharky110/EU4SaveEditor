@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.IO;
@@ -8,60 +7,56 @@ using System.Linq;
 
 namespace EU4SaveEditor
 {
-    class SearchEngine
+    internal class SearchEngine
     {
         #region ----- Объявление переменных -------------------------------------------------------
 
         /// <summary>
-        /// Список стран
+        /// List of countries
         /// </summary>
-        private List<Country> Countries;
+        private readonly List<Country> _countries;
 
         /// <summary>
-        /// Список провинций
+        /// List of provinces
         /// </summary>
-        private List<Province> Provinces;
+        private readonly List<Province> _provinces;
 
-        private List<Province> ProvincesOfCountry;
+        private List<Province> _provincesOfCountry;
 
-        private List<int> SelectedProvincesId;
+        private readonly List<int> _selectedProvincesId;
 
-        private int CurrentProvince;
+        private int _currentProvince;
 
         private string FilePath { get; set; }
 
         /// <summary>
-        /// Массив всех строк в файле сохранения
+        /// Array of rows in save file
         /// </summary>
-        private string[] SavedDataFile;
-
-        private bool duplicate;
-
+        private string[] _savedDataFile;
         #endregion --------------------------------------------------------------------------------
-        
+
         public SearchEngine()
         {
-            Countries = new List<Country>();
-            Provinces = new List<Province>();
-            ProvincesOfCountry = new List<Province>();
-            SelectedProvincesId = new List<int>();
+            _countries = new List<Country>();
+            _provinces = new List<Province>();
+            _provincesOfCountry = new List<Province>();
+            _selectedProvincesId = new List<int>();
 
-            CurrentProvince = 0;
-            duplicate = false;
+            _currentProvince = 0;
         }
 
         public void FindAllCountries()
         {
-            Regex countryRegEx = new Regex("country=\"[A-Z]{3}\"");
-            
-            var countries = SavedDataFile.Select((s, i) => new { i, s })
+            var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
+
+            var countries = _savedDataFile.Select((s, i) => new { i, s })
                                 .Where(t => countryRegEx.IsMatch(t.s))
-                                .Select(r => new Country { CountryName = r.s.Split('\"')[1] , CountryId =  r.i + 1})
+                                .Select(r => new Country { CountryName = r.s.Split('\"')[1], CountryId = r.i + 1 })
                                 .GroupBy(r => r.CountryName)
                                 .Select(r => r.First())
                                 .ToList();
-            
-            this.Countries.AddRange(countries);
+
+            _countries.AddRange(countries);
         }
 
         public void FindAllProvinces(ref ListBox lbCountries)
@@ -70,39 +65,36 @@ namespace EU4SaveEditor
             int ownerId = 0;
             int provinceCounter = 0;
 
-            string provinceName = string.Empty;
-            string ownerName = string.Empty;
+            string provinceName;
 
-            bool isProvinceAlreadyExists;
+            bool duplicate = false;
 
-            Regex ProvRegEx = new Regex("name=\"[A-Z][a-z]*" + @"\s" + "*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
-            
-            foreach (string str in SavedDataFile)
+            var provRegEx = new Regex("name=\"[A-Z][a-z]*" + @"\s" + "*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
+
+            foreach (string str in _savedDataFile)
             {
-                if (ProvRegEx.IsMatch(str))
+                if (provRegEx.IsMatch(str))
                 {
                     provinceName = str.Split('\"')[1];
 
-                    isProvinceAlreadyExists = Provinces
-                                                  .Where(p => p.ProvinceName == provinceName)
-                                                  .LastOrDefault() != null;
-                    
+                    bool isProvinceAlreadyExists = _provinces.LastOrDefault(p => p.ProvinceName == provinceName) != null;
+
                     if (!isProvinceAlreadyExists)
                     {
-                        ownerName = SetCountryForProvince(SavedDataFile[index]);
+                        string ownerName = SetCountryForProvince(_savedDataFile[index]);
 
                         if (ownerName != "Not Province")
                         {
-                            for (int i = 0; i < Countries.Count; i++)
+                            foreach (var country in _countries)
                             {
-                                if (Countries[i].CountryName == ownerName)
+                                if (country.CountryName == ownerName)
                                 {
-                                    ownerId = Countries[i].CountryId;
+                                    ownerId = country.CountryId;
                                     break;
                                 }
                             }
 
-                            Provinces.Add(new Province(provinceName, index, provinceCounter, ownerName, ownerId));
+                            _provinces.Add(new Province(provinceName, index, provinceCounter, ownerName, ownerId));
 
                             provinceCounter++;
                         }
@@ -112,18 +104,18 @@ namespace EU4SaveEditor
                 index++;
             }
 
-            for (int i = 0; i < Provinces.Count; i++)
+            for (int i = 0; i < _provinces.Count; i++)
             {
                 for (int j = 0; j < i; j++)
                 {
-                    if (Provinces[i].OwnerName == Provinces[j].OwnerName)
+                    if (_provinces[i].OwnerName == _provinces[j].OwnerName)
                     {
                         duplicate = true;
                         break;
                     }
                 }
                 if (duplicate == false)
-                    lbCountries.Items.Add(Provinces[i].OwnerName);
+                    lbCountries.Items.Add(_provinces[i].OwnerName);
 
                 duplicate = false;
             }
@@ -133,8 +125,8 @@ namespace EU4SaveEditor
         {
             string countryName = "Not Province";
 
-            Regex countryRegEx = new Regex("owner=\"[A-Z]{3}\"");
-            Regex countryRegEx2 = new Regex("previ");
+            var countryRegEx = new Regex("owner=\"[A-Z]{3}\"");
+            var countryRegEx2 = new Regex("previ");
 
             if (countryRegEx.IsMatch(targetString))
                 countryName = targetString.Split('\"')[1];
@@ -146,23 +138,23 @@ namespace EU4SaveEditor
 
         public void FindProvinceParameters(ref List<Province> currentProvinces, int currentProv)
         {
-            int StartSearchId = currentProvinces[currentProv].ProvinceId;
+            int startSearchId = currentProvinces[currentProv].ProvinceId;
             int closeId = 0;
 
-            Regex RegExTax = new Regex("base_tax=");
-            Regex RegExProd = new Regex("base_production=");
-            Regex RegExManPow = new Regex("base_manpower=");
+            var regExTax = new Regex("base_tax=");
+            var regExProd = new Regex("base_production=");
+            var regExManPow = new Regex("base_manpower=");
 
-            for (int i = StartSearchId; i < StartSearchId + 100; i++)
+            for (int i = startSearchId; i < startSearchId + 100; i++)
             {
-                currentProvinces[currentProv].OrigCltr = SavedDataFile[i].Contains("original_culture") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigCltr;
-                currentProvinces[currentProv].Cltr = SavedDataFile[i].Contains("\tculture") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Cltr;
-                currentProvinces[currentProv].OrigRlgn = SavedDataFile[i].Contains("original_religion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigRlgn;
-                currentProvinces[currentProv].Rlgn = SavedDataFile[i].Contains("\treligion") ? SavedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Rlgn;
-                
-                if (RegExTax.IsMatch(SavedDataFile[i]))
+                currentProvinces[currentProv].OrigCltr = _savedDataFile[i].Contains("original_culture") ? _savedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigCltr;
+                currentProvinces[currentProv].Cltr = _savedDataFile[i].Contains("\tculture") ? _savedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Cltr;
+                currentProvinces[currentProv].OrigRlgn = _savedDataFile[i].Contains("original_religion") ? _savedDataFile[i].Split('=')[1] : currentProvinces[currentProv].OrigRlgn;
+                currentProvinces[currentProv].Rlgn = _savedDataFile[i].Contains("\treligion") ? _savedDataFile[i].Split('=')[1] : currentProvinces[currentProv].Rlgn;
+
+                if (regExTax.IsMatch(_savedDataFile[i]))
                 {
-                    currentProvinces[currentProv].Tax = SavedDataFile[i].Split('=')[1];
+                    currentProvinces[currentProv].Tax = _savedDataFile[i].Split('=')[1];
                     currentProvinces[currentProv].TaxId = i;
 
                     closeId = i;
@@ -172,9 +164,9 @@ namespace EU4SaveEditor
             }
             for (int i = closeId; i < closeId + 10; i++)
             {
-                if (RegExProd.IsMatch(SavedDataFile[i]))
+                if (regExProd.IsMatch(_savedDataFile[i]))
                 {
-                    currentProvinces[currentProv].Prod = SavedDataFile[i].Split('=')[1];
+                    currentProvinces[currentProv].Prod = _savedDataFile[i].Split('=')[1];
                     currentProvinces[currentProv].ProdId = i;
 
                     break;
@@ -182,9 +174,9 @@ namespace EU4SaveEditor
             }
             for (int i = closeId; i < closeId + 10; i++)
             {
-                if (RegExManPow.IsMatch(SavedDataFile[i]))
+                if (regExManPow.IsMatch(_savedDataFile[i]))
                 {
-                    currentProvinces[currentProv].ManPow = SavedDataFile[i].Split('=')[1];
+                    currentProvinces[currentProv].ManPow = _savedDataFile[i].Split('=')[1];
                     currentProvinces[currentProv].ManPowId = i;
 
                     break;
@@ -192,44 +184,44 @@ namespace EU4SaveEditor
             }
         }
 
-        public void CountryChanged(string SelectedCountry, ref ListBox lbProvinces, ref Label ProvincesCount)
+        public void CountryChanged(string selectedCountry, ref ListBox lbProvinces, ref Label provincesCount)
         {
             lbProvinces.Items.Clear();
-            ProvincesOfCountry.Clear();
+            _provincesOfCountry.Clear();
 
-            for (int i = 0; i < Provinces.Count; i++)
+            foreach (var province in _provinces)
             {
-                if (SelectedCountry == Provinces[i].OwnerName)
+                if (selectedCountry == province.OwnerName)
                 {
-                    lbProvinces.Items.Add(Provinces[i].ProvinceName);
-                    ProvincesOfCountry.Add(Provinces[i]);
+                    lbProvinces.Items.Add(province.ProvinceName);
+                    _provincesOfCountry.Add(province);
                 }
             }
 
-            ProvincesCount.Text = lbProvinces.Items.Count.ToString();
+            provincesCount.Text = lbProvinces.Items.Count.ToString();
         }
 
-        public void ProvinceChanged(ref ListBox lbProvinces, ref GroupBox gbProvProsp, ref TextBox OrigCltr, 
-                                    ref TextBox Cltr, ref TextBox OrigRlgn, ref TextBox Rlgn  )
+        public void ProvinceChanged(ref ListBox lbProvinces, ref GroupBox gbProvProsp, ref TextBox origCltr,
+                                    ref TextBox cltr, ref TextBox origRlgn, ref TextBox rlgn)
         {
             if (lbProvinces.SelectedItems.Count < 2)
             {
-                for (int currentProv = 0; currentProv < ProvincesOfCountry.Count; currentProv++)
+                for (int currentProv = 0; currentProv < _provincesOfCountry.Count; currentProv++)
                 {
-                    if (lbProvinces.SelectedItem.ToString() == ProvincesOfCountry[currentProv].ProvinceName)
+                    if (lbProvinces.SelectedItem.ToString() == _provincesOfCountry[currentProv].ProvinceName)
                     {
-                        FindProvinceParameters(ref ProvincesOfCountry, currentProv);
+                        FindProvinceParameters(ref _provincesOfCountry, currentProv);
 
-                        CurrentProvince = ProvincesOfCountry[currentProv].ProvinceIndex;
+                        _currentProvince = _provincesOfCountry[currentProv].ProvinceIndex;
 
-                        (gbProvProsp.Controls["tbAdm"] as TextBox).Text = ProvincesOfCountry[currentProv].Tax;
-                        (gbProvProsp.Controls["tbDip"] as TextBox).Text = ProvincesOfCountry[currentProv].Prod;
-                        (gbProvProsp.Controls["tbMil"] as TextBox).Text = ProvincesOfCountry[currentProv].ManPow;
+                        ((TextBox) gbProvProsp.Controls["tbAdm"]).Text = _provincesOfCountry[currentProv].Tax;
+                        ((TextBox) gbProvProsp.Controls["tbDip"]).Text = _provincesOfCountry[currentProv].Prod;
+                        ((TextBox) gbProvProsp.Controls["tbMil"]).Text = _provincesOfCountry[currentProv].ManPow;
 
-                        OrigCltr.Text = ProvincesOfCountry[currentProv].OrigCltr;
-                        Cltr.Text = ProvincesOfCountry[currentProv].Cltr;
-                        OrigRlgn.Text = ProvincesOfCountry[currentProv].OrigRlgn;
-                        Rlgn.Text = ProvincesOfCountry[currentProv].Rlgn;
+                        origCltr.Text = _provincesOfCountry[currentProv].OrigCltr;
+                        cltr.Text = _provincesOfCountry[currentProv].Cltr;
+                        origRlgn.Text = _provincesOfCountry[currentProv].OrigRlgn;
+                        rlgn.Text = _provincesOfCountry[currentProv].Rlgn;
 
                         break;
                     }
@@ -243,56 +235,56 @@ namespace EU4SaveEditor
 
         public void OpenFile(ref ListBox lbCountries, ref ListBox lbProvinces, ref Label lblLoadedFile, ref Label lblCountriesCount)
         {
-            OpenFileDialog OpenFile = new OpenFileDialog
+            OpenFileDialog openFile = new OpenFileDialog
             {
                 Filter = "Europa Universalis 4 save (*.eu4)|*.eu4"
             };
 
-            OpenFile.ShowDialog();
+            openFile.ShowDialog();
 
-            if (OpenFile.FileName != string.Empty)
-            {
-                FilePath = OpenFile.FileName;
+            if (openFile.FileName == string.Empty)
+                return;
 
-                lblLoadedFile.Text = OpenFile.FileName;
+            FilePath = openFile.FileName;
 
-                string SourceFile = File.ReadAllText(OpenFile.FileName, Encoding.GetEncoding(1252));
+            lblLoadedFile.Text = openFile.FileName;
 
-                SavedDataFile = SourceFile.Split('\n');
+            string sourceFile = File.ReadAllText(openFile.FileName, Encoding.GetEncoding(1252));
 
-                Countries.Clear();
-                Provinces.Clear();
+            _savedDataFile = sourceFile.Split('\n');
 
-                lbCountries.Items.Clear();
-                lbProvinces.Items.Clear();
+            _countries.Clear();
+            _provinces.Clear();
 
-                FindAllCountries();
-                FindAllProvinces(ref lbCountries);
+            lbCountries.Items.Clear();
+            lbProvinces.Items.Clear();
 
-                lblCountriesCount.Text = lbCountries.Items.Count.ToString();
-            }
+            FindAllCountries();
+            FindAllProvinces(ref lbCountries);
+
+            lblCountriesCount.Text = lbCountries.Items.Count.ToString();
         }
 
         public void SaveFile()
         {
             if (FilePath != string.Empty)
             {
-                SaveFileDialog SaveFile = new SaveFileDialog
+                SaveFileDialog saveFile = new SaveFileDialog
                 {
                     Filter = "Europa Universalis 4 save (*.eu4)|*.eu4"
                 };
 
-                SaveFile.ShowDialog();
+                saveFile.ShowDialog();
 
-                if (SaveFile.FileName != string.Empty)
+                if (saveFile.FileName == string.Empty)
+                    return;
+
+                var myfile = new StreamWriter(saveFile.FileName, false, Encoding.GetEncoding(1252));
+                foreach (var row in _savedDataFile)
                 {
-                    StreamWriter myfile = new StreamWriter(SaveFile.FileName, false, Encoding.GetEncoding(1252));
-                    for (int i = 0; i < SavedDataFile.Length; i++)
-                    {
-                        myfile.Write(SavedDataFile[i] + "\n");
-                    }
-                    myfile.Close();
+                    myfile.Write(row + "\n");
                 }
+                myfile.Close();
             }
             else
             {
@@ -306,50 +298,46 @@ namespace EU4SaveEditor
             {
                 if (lbProvinces.SelectedItems.Count < 2)
                 {
-                    switch ((sender as TextBox).Name)
+                    switch ((sender as TextBox)?.Name)
                     {
                         case "tbAdm":
-                            SavedDataFile[Provinces[CurrentProvince].TaxId] = "    base_tax=" + (sender as TextBox).Text;
+                            _savedDataFile[_provinces[_currentProvince].TaxId] = "    base_tax=" + ((TextBox) sender).Text;
                             break;
                         case "tbDip":
-                            SavedDataFile[Provinces[CurrentProvince].ProdId] = "    base_production=" + (sender as TextBox).Text;
+                            _savedDataFile[_provinces[_currentProvince].ProdId] = "    base_production=" + ((TextBox) sender).Text;
                             break;
                         case "tbMil":
-                            SavedDataFile[Provinces[CurrentProvince].ManPowId] = "    base_manpower=" + (sender as TextBox).Text;
-                            break;
-                        default:
+                            _savedDataFile[_provinces[_currentProvince].ManPowId] = "    base_manpower=" + ((TextBox) sender).Text;
                             break;
                     }
                 }
                 else
                 {
-                    SelectedProvincesId.Clear();
-                    for (int i = 0; i < ProvincesOfCountry.Count; i++)
+                    _selectedProvincesId.Clear();
+                    for (int i = 0; i < _provincesOfCountry.Count; i++)
                     {
                         for (int j = 0; j < lbProvinces.SelectedItems.Count; j++)
                         {
-                            if (lbProvinces.SelectedItems[j].ToString() == ProvincesOfCountry[i].ProvinceName)
+                            if (lbProvinces.SelectedItems[j].ToString() == _provincesOfCountry[i].ProvinceName)
                             {
-                                FindProvinceParameters(ref ProvincesOfCountry, i);
-                                SelectedProvincesId.Add(ProvincesOfCountry[i].ProvinceIndex);
+                                FindProvinceParameters(ref _provincesOfCountry, i);
+                                _selectedProvincesId.Add(_provincesOfCountry[i].ProvinceIndex);
                                 break;
                             }
                         }
                     }
-                    for (int i = 0; i < SelectedProvincesId.Count; i++)
+                    foreach (var provinceId in _selectedProvincesId)
                     {
-                        switch ((sender as TextBox).Name)
+                        switch ((sender as TextBox)?.Name)
                         {
                             case "tbAdm":
-                                SavedDataFile[Provinces[SelectedProvincesId[i]].TaxId] = "    base_tax=" + (sender as TextBox).Text;
+                                _savedDataFile[_provinces[provinceId].TaxId] = "    base_tax=" + ((TextBox) sender).Text;
                                 break;
                             case "tbDip":
-                                SavedDataFile[Provinces[SelectedProvincesId[i]].ProdId] = "    base_production=" + (sender as TextBox).Text;
+                                _savedDataFile[_provinces[provinceId].ProdId] = "    base_production=" + ((TextBox) sender).Text;
                                 break;
                             case "tbMil":
-                                SavedDataFile[Provinces[SelectedProvincesId[i]].ManPowId] = "    base_manpower=" + (sender as TextBox).Text;
-                                break;
-                            default:
+                                _savedDataFile[_provinces[provinceId].ManPowId] = "    base_manpower=" + ((TextBox) sender).Text;
                                 break;
                         }
                     }
