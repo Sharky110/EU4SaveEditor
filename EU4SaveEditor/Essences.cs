@@ -39,10 +39,10 @@
         public string ManPow { get; set; }
         public int ManPowId { get; set; }
 
-        public string OrigCltr { get; set; }
-        public string Cltr { get; set; }
+        public string OriginalCulture { get; set; }
+        public string CurrentCulture { get; set; }
 
-        public string OrigRlgn { get; set; }
-        public string Rlgn { get; set; }
+        public string OriginalReligion { get; set; }
+        public string CurrentReligion { get; set; }
     }
 }
