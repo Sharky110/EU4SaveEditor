@@ -3,3 +3,11 @@
 ################################################################################
 
 /.vs/EU4SaveEditor/v15
+
+#
+*.exe
+
+
+#Bin Debug Release
+/EU4SaveEditor/obj
+/EU4SaveEditor/bin
