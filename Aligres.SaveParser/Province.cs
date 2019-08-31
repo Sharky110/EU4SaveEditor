@@ -1,18 +1,6 @@
-﻿namespace EU4SaveEditor
+﻿namespace Aligres.SaveParser
 {
-    internal class Country
-    {
-        public Country(string vName = "Useless", int vId = 0)
-        {
-            CountryName = vName;
-            CountryId = vId;
-        }
-
-        public string CountryName { get; set; }
-        public int CountryId { get; set; }
-    }
-
-    internal class Province
+    public class Province
     {
         public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless", int ownId = 0)
         {
