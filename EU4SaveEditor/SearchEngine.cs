@@ -10,7 +10,7 @@ namespace EU4SaveEditor
 {
     internal class SearchEngine
     {
-        #region ----- Объявление переменных -------------------------------------------------------
+        #region ----- Variables -------------------------------------------------------
 
         /// <summary>
         /// List of countries
@@ -27,10 +27,19 @@ namespace EU4SaveEditor
         /// </summary>
         private readonly List<Province> _provincesOfCountry;
 
+        /// <summary>
+        /// List of selected provinces
+        /// </summary>
         private readonly List<int> _selectedProvincesId;
 
+        /// <summary>
+        /// Selected province 
+        /// </summary>
         private int _currentProvince;
 
+        /// <summary>
+        /// Path to file
+        /// </summary>
         private string FilePath { get; set; }
 
         /// <summary>
@@ -39,7 +48,11 @@ namespace EU4SaveEditor
         private string[] _savedDataFile;
         #endregion --------------------------------------------------------------------------------
 
-        public SearchEngine()
+        #region ----- Singleton -------------------------------------------------------
+
+        private static SearchEngine _instance;
+
+        private SearchEngine()
         {
             _countries = new List<Country>();
             _provinces = new List<Province>();
@@ -49,7 +62,14 @@ namespace EU4SaveEditor
             _currentProvince = 0;
         }
 
-        public void FindAllCountries()
+        public static SearchEngine GetInstance()
+        {
+            return _instance ?? (_instance = new SearchEngine());
+        }
+
+        #endregion
+
+        private void FindAllCountries()
         {
             var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
 
@@ -63,7 +83,7 @@ namespace EU4SaveEditor
             _countries.AddRange(countries);
         }
 
-        public void FindAllProvinces(ref ListBox lbCountries)
+        private void FindAllProvinces(ref ListBox lbCountries)
         {
             int index = 1;
             int ownerId = 0;
@@ -125,7 +145,7 @@ namespace EU4SaveEditor
             }
         }
 
-        public string SetCountryForProvince(string targetString)
+        private string SetCountryForProvince(string targetString)
         {
             string countryName = "Not Province";
 
@@ -140,7 +160,7 @@ namespace EU4SaveEditor
             return countryName;
         }
 
-        public void ChangeProvinceParameters(Province currentProvinces)
+        private void ChangeProvinceParameters(Province currentProvinces)
         {
             int startSearchId = currentProvinces.ProvinceId;
             int closeId = 0;
@@ -270,7 +290,7 @@ namespace EU4SaveEditor
         {
             if (!string.IsNullOrEmpty(FilePath))
             {
-                SaveFileDialog saveFile = new SaveFileDialog
+                var saveFile = new SaveFileDialog
                 {
                     Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")
                 };
@@ -280,12 +300,12 @@ namespace EU4SaveEditor
                 if (saveFile.FileName == string.Empty)
                     return;
 
-                var myfile = new StreamWriter(saveFile.FileName, false, Encoding.GetEncoding(1252));
+                var streamWriter = new StreamWriter(saveFile.FileName, false, Encoding.GetEncoding(1252));
                 foreach (var row in _savedDataFile)
                 {
-                    myfile.Write(row + "\n");
+                    streamWriter.Write(row + "\n");
                 }
-                myfile.Close();
+                streamWriter.Close();
             }
             else
             {

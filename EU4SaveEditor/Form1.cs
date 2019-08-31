@@ -5,7 +5,7 @@ namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
-        private readonly SearchEngine _searchEngine = new SearchEngine();
+        private readonly SearchEngine _searchEngine = SearchEngine.GetInstance();
 
         public Form1()
         {

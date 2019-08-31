@@ -1,6 +1,6 @@
 ﻿namespace EU4SaveEditor
 {
-    class Country
+    internal class Country
     {
         public Country(string vName = "Useless", int vId = 0)
         {
@@ -12,7 +12,7 @@
         public int CountryId { get; set; }
     }
 
-    class Province
+    internal class Province
     {
         public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless", int ownId = 0)
         {
