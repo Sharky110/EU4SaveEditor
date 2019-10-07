@@ -8,11 +8,11 @@ using Aligres.SaveParser;
 
 namespace EU4SaveEditor
 {
-    internal class FormViewModel
+    internal class FormVM
     {
         private readonly SaveParser _saveParser = SaveParser.GetInstance();
 
-        private static void AddValsToListBox(IEnumerable<string> list, ref ListBox listBox)
+        private static void AddValsToListBox(IEnumerable<string> list, ListBox listBox)
         {
             foreach (var str in list)
             {
@@ -20,21 +20,22 @@ namespace EU4SaveEditor
             }
         }
 
-        public void CountryChanged(string country, ref ListBox lbProvinces, ref Label labelProvincesCount )
+        public void CountryChanged(string country, ListBox lbProvinces, Label labelProvincesCount )
         {
+            var newProvinces = _saveParser.GetProvincesOfContry(country);
+
             lbProvinces.Items.Clear();
-
-            var newProvinces = _saveParser.CountryChanged(country);
-
-            AddValsToListBox(newProvinces, ref lbProvinces);
+            AddValsToListBox(newProvinces, lbProvinces);
 
             labelProvincesCount.Text = newProvinces.Count().ToString();
         }
 
-        public void ProvinceChanged(ref ListBox lbProvinces, ref GroupBox gbProvinceProsperity, ref TextBox tbOriginalCulture,
-            ref TextBox tbCurrentCulture, ref TextBox tbOriginalReligion, ref TextBox tbCurrentReligion)
+        public void ProvinceChanged(ListBox lbProvinces, GroupBox gbProvinceProsperity, TextBox tbOriginalCulture,
+            TextBox tbCurrentCulture, TextBox tbOriginalReligion, TextBox tbCurrentReligion)
         {
-            var province = _saveParser.ProvinceChanged(lbProvinces.SelectedItem.ToString());
+            if (lbProvinces.SelectedItem == null)
+                return;
+            var province = _saveParser.GetProvince(lbProvinces.SelectedItem.ToString());
 
             ((TextBox)gbProvinceProsperity.Controls["tbAdm"]).Text = province.Tax;
             ((TextBox)gbProvinceProsperity.Controls["tbDip"]).Text = province.Prod;
@@ -46,26 +47,24 @@ namespace EU4SaveEditor
             tbCurrentReligion.Text = province.CurrentReligion;
         }
 
-        public void OpenFile(ref ListBox lbCountries, ref ListBox lbProvinces, 
-            ref Label labelLoadedFile, ref Label labelCountriesCount)
+        public void OpenFile(ListBox lbCountries, ListBox lbProvinces, Label labelLoadedFile, Label labelCountriesCount)
         {
-            OpenFileDialog openFile = new OpenFileDialog
+            string fileName;
+            using (var openFileDialog = new OpenFileDialog() { Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter") })
             {
-                Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")
-            };
+                openFileDialog.ShowDialog();
+                if (openFileDialog.FileName == string.Empty)
+                    return;
+                fileName = openFileDialog.FileName;
+            }
 
-            openFile.ShowDialog();
+            _saveParser.FilePath = fileName;
 
-            if (openFile.FileName == string.Empty)
-                return;
+            labelLoadedFile.Text = fileName;
 
-            _saveParser.FilePath = openFile.FileName;
+            var sourceFile = File.ReadAllText(fileName, Encoding.GetEncoding(1252));
 
-            labelLoadedFile.Text = openFile.FileName;
-
-            var sourceFile = File.ReadAllText(openFile.FileName, Encoding.GetEncoding(1252));
-
-            _saveParser.SavedDataFile = sourceFile.Split('\n');
+            _saveParser.SaveFile = sourceFile.Split('\n');
 
             _saveParser.ClearLists();
 
@@ -73,43 +72,41 @@ namespace EU4SaveEditor
             lbProvinces.Items.Clear();
 
             _saveParser.FindAllCountries();
-            var listOfCountries = _saveParser.FindAllProvinces();
+            _saveParser.FindAllProvinces();
+            var listOfCountries = _saveParser.GetCountries();
 
-            AddValsToListBox(listOfCountries, ref lbCountries);
+            AddValsToListBox(listOfCountries, lbCountries);
 
             labelCountriesCount.Text = lbCountries.Items.Count.ToString();
         }
 
         public void SaveFile()
         {
-            if (!string.IsNullOrEmpty(_saveParser.FilePath))
-            {
-                var saveFile = new SaveFileDialog
-                {
-                    Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")
-                };
-
-                saveFile.ShowDialog();
-
-                if (saveFile.FileName == string.Empty)
-                    return;
-
-                var streamWriter = new StreamWriter(saveFile.FileName, false, Encoding.GetEncoding(1252));
-                foreach (var row in _saveParser.SavedDataFile)
-                {
-                    streamWriter.Write(row + "\n");
-                }
-                streamWriter.Close();
-            }
-            else
+            if (string.IsNullOrEmpty(_saveParser.FilePath))
             {
                 MessageBox.Show("File not opened.", "Error.");
+                return;
             }
+            string saveFile;
+            using (var saveFileDialog = new SaveFileDialog() { Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")})
+            {
+                saveFileDialog.ShowDialog();
+                if (saveFileDialog.FileName == string.Empty)
+                    return;
+                saveFile = saveFileDialog.FileName;
+            }
+
+            var streamWriter = new StreamWriter(saveFile, false, Encoding.GetEncoding(1252));
+            foreach (var row in _saveParser.SaveFile)
+            {
+                streamWriter.Write(row + "\n");
+            }
+            streamWriter.Close();
         }
 
         public void SetPoints(ref object sender, ListBox lbProvinces)
         {
-            if (!string.IsNullOrEmpty(_saveParser.FilePath))
+            if (string.IsNullOrEmpty(_saveParser.FilePath))
                 return;
 
             if (lbProvinces.SelectedItems.Count == 1)
@@ -117,15 +114,15 @@ namespace EU4SaveEditor
                 switch ((sender as TextBox)?.Name)
                 {
                     case "tbAdm":
-                        _saveParser.SavedDataFile[_saveParser.Provinces[_saveParser.CurrentProvince].TaxId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].TaxId] = 
                             "    base_tax=" + ((TextBox)sender).Text;
                         break;
                     case "tbDip":
-                        _saveParser.SavedDataFile[_saveParser.Provinces[_saveParser.CurrentProvince].ProdId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].ProdId] = 
                             "    base_production=" + ((TextBox)sender).Text;
                         break;
                     case "tbMil":
-                        _saveParser.SavedDataFile[_saveParser.Provinces[_saveParser.CurrentProvince].ManPowId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].ManPowId] = 
                             "    base_manpower=" + ((TextBox)sender).Text;
                         break;
                 }
@@ -135,10 +132,10 @@ namespace EU4SaveEditor
                 _saveParser.SelectedProvincesId.Clear();
                 foreach (var province in _saveParser.ProvincesOfCountry)
                 {
-                    if (lbProvinces.SelectedItems.Cast<object>().Any(provinceItem => provinceItem.ToString() == province.ProvinceName))
+                    if (lbProvinces.SelectedItems.Cast<object>().Any(provinceItem => provinceItem.ToString() == province.Name))
                     {
                         _saveParser.ChangeProvinceParameters(province);
-                        _saveParser.SelectedProvincesId.Add(province.ProvinceIndex);
+                        _saveParser.SelectedProvincesId.Add(province.Id);
                     }
                 }
                 foreach (var provinceId in _saveParser.SelectedProvincesId)
@@ -146,15 +143,15 @@ namespace EU4SaveEditor
                     switch ((sender as TextBox)?.Name)
                     {
                         case "tbAdm":
-                            _saveParser.SavedDataFile[_saveParser.Provinces[provinceId].TaxId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].TaxId] = 
                                 "    base_tax=" + ((TextBox)sender).Text;
                             break;
                         case "tbDip":
-                            _saveParser.SavedDataFile[_saveParser.Provinces[provinceId].ProdId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].ProdId] = 
                                 "    base_production=" + ((TextBox)sender).Text;
                             break;
                         case "tbMil":
-                            _saveParser.SavedDataFile[_saveParser.Provinces[provinceId].ManPowId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].ManPowId] = 
                                 "    base_manpower=" + ((TextBox)sender).Text;
                             break;
                     }

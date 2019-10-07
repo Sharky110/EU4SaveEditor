@@ -5,7 +5,7 @@ namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
-        readonly FormViewModel _formViewModel = new FormViewModel();
+        readonly FormVM _formViewModel = new FormVM();
 
         public Form1()
         {
@@ -14,17 +14,17 @@ namespace EU4SaveEditor
 
         private void ListBoxCountries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _formViewModel.CountryChanged(lbCountries.SelectedItem.ToString(), ref lbProvinces, ref labelProvincesCount);
+            _formViewModel.CountryChanged(lbCountries.SelectedItem.ToString(), lbProvinces, labelProvincesCount);
         }
 
         private void ListBoxProvinces_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _formViewModel.ProvinceChanged(ref lbProvinces, ref gbProvProsp, ref tbOrigCltr, ref tbCltr, ref tbOrigRlgn, ref tbRlgn);
+            _formViewModel.ProvinceChanged(lbProvinces, gbProvProsp, tbOrigCltr, tbCltr, tbOrigRlgn, tbRlgn);
         }
 
         private void openFile_Click(object sender, EventArgs e)
         {
-            _formViewModel.OpenFile(ref lbCountries, ref lbProvinces, ref labelLoadedFile, ref labelCountriesCount);
+            _formViewModel.OpenFile(lbCountries, lbProvinces, labelLoadedFile, labelCountriesCount);
         }
 
         private void saveFile_Click(object sender, EventArgs e)

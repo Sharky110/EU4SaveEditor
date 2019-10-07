@@ -158,14 +158,14 @@ namespace Aligres.SaveParser
             }
         }
 
-        public List<string> CountryChanged(string selectedCountry)
+        public List<string> GetProvincesOfContry(string selectedCountry)
         {
             ProvincesOfCountry.Clear();
             ProvincesOfCountry.AddRange(Provinces.Where(province => selectedCountry == province.OwnerName));
             return ProvincesOfCountry.Select(p => p.Name).ToList();
         }
 
-        public Province ProvinceChanged(string provinceName)
+        public Province GetProvince(string provinceName)
         {
             Province tempProvince = new Province();
             foreach (var province in ProvincesOfCountry.Where(province => province.Name == provinceName))
