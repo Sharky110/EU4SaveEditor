@@ -6,49 +6,21 @@ namespace Aligres.SaveParser
 {
     public class SaveParser
     {
-        #region ----- Variables -------------------------------------------------------
+        #region ----- Variables -------------------------------------------------------------------
 
-        /// <summary>
-        /// List of countries
-        /// </summary>
-        public readonly List<Country> Countries;
-
-        /// <summary>
-        /// List of provinces
-        /// </summary>
+        private readonly List<Country> Countries;
         public readonly List<Province> Provinces;
-
-        /// <summary>
-        /// List of provinces of selected country
-        /// </summary>
         public readonly List<Province> ProvincesOfCountry;
-
-        /// <summary>
-        /// List of selected provinces
-        /// </summary>
         public readonly List<int> SelectedProvincesId;
-
-        /// <summary>
-        /// Selected province 
-        /// </summary>
         public int CurrentProvince;
-
-        /// <summary>
-        /// Path to file
-        /// </summary>
-        public string FilePath { get; set; }
-
-        /// <summary>
-        /// Array of rows in save file
-        /// </summary>
-        public string[] SavedDataFile;
+        public string FilePath;
+        public string[] SaveFile;
 
         #endregion --------------------------------------------------------------------------------
 
-        #region ----- Singleton -------------------------------------------------------
+        #region ----- Singleton -------------------------------------------------------------------
 
         private static SaveParser _instance;
-
         private SaveParser()
         {
             Countries = new List<Country>();
@@ -64,108 +36,76 @@ namespace Aligres.SaveParser
             return _instance ?? (_instance = new SaveParser());
         }
 
-        #endregion
+        #endregion --------------------------------------------------------------------------------
 
         public void FindAllCountries()
         {
             var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
 
-            var countries = SavedDataFile.Select((s, i) => new {i, s})
+            var countries = SaveFile.Select((value, index) => new {i = index, s = value})
                 .Where(t => countryRegEx.IsMatch(t.s))
-                .Select(r => new Country {CountryName = r.s.Split('\"')[1], CountryId = r.i + 1})
-                .GroupBy(r => r.CountryName)
+                .Select(r => new Country { Name = r.s.Split('\"')[1], Id = r.i + 1})
+                .GroupBy(r => r.Name)
                 .Select(r => r.First())
                 .ToList();
 
             Countries.AddRange(countries);
         }
 
-        public List<string> FindAllProvinces()
+        public void FindAllProvinces()
         {
-            var index = 1;
-            var ownerId = 0;
+            var index = 0;
             var provinceCounter = 0;
-
-            var countries = new List<string>();
 
             string provinceName;
 
-            var duplicate = false;
+            var provRegEx = new Regex("name=\"[A-Z]*[a-z]*"+ @"\s" + "*[A-Z][a-z]*\"", RegexOptions.Singleline);
 
-            var provRegEx = new Regex("name=\"[A-Z][a-z]*" + @"\s" + "*[A-Z]*[a-z]*\"$", RegexOptions.Singleline);
-
-            foreach (string str in SavedDataFile)
+            foreach (string str in SaveFile)
             {
-                if (provRegEx.IsMatch(str))
-                {
-                    provinceName = str.Split('\"')[1];
-
-                    bool isProvinceAlreadyExists =
-                        Provinces.LastOrDefault(p => p.ProvinceName == provinceName) != null;
-
-                    if (!isProvinceAlreadyExists)
-                    {
-                        string ownerName = SetCountryForProvince(SavedDataFile[index]);
-
-                        if (ownerName != "Not Province")
-                        {
-                            foreach (var country in Countries)
-                            {
-                                if (country.CountryName == ownerName)
-                                {
-                                    ownerId = country.CountryId;
-                                    break;
-                                }
-                            }
-
-                            Provinces.Add(new Province(provinceName, index, provinceCounter, ownerName, ownerId));
-
-                            provinceCounter++;
-                        }
-                    }
-                }
-
                 index++;
+
+                if (!provRegEx.IsMatch(str))
+                    continue;
+
+                provinceName = str.Split('\"')[1];
+
+                var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
+                if (isProvinceAlreadyExists)
+                    continue;
+
+                var ownerString = SaveFile[index];
+                var ownerName = GetOwnerName(ownerString);
+
+                if (ownerName == "Not Province")
+                    continue;
+
+                Provinces.Add(new Province(provinceName, index, provinceCounter, ownerName));
+                provinceCounter++;
             }
-
-            for (int i = 0; i < Provinces.Count; i++)
-            {
-                for (int j = 0; j < i; j++)
-                {
-                    if (Provinces[i].OwnerName == Provinces[j].OwnerName)
-                    {
-                        duplicate = true;
-                        break;
-                    }
-                }
-
-                if (duplicate == false)
-                    countries.Add(Provinces[i].OwnerName);
-
-                duplicate = false;
-            }
-
-            return countries;
         }
 
-        private string SetCountryForProvince(string targetString)
+        public List<string> GetCountries()
         {
-            string countryName = "Not Province";
-
-            var countryRegEx = new Regex("owner=\"[A-Z]{3}\"");
-            var countryRegEx2 = new Regex("previ");
-
-            if (countryRegEx.IsMatch(targetString))
-                countryName = targetString.Split('\"')[1];
-            else if (countryRegEx2.IsMatch(targetString))
-                countryName = "_No Owner";
-
-            return countryName;
+            return Provinces.Select(p => p.OwnerName).Distinct().ToList();
         }
 
-        public void ChangeProvinceParameters(Province currentProvinces)
+        private string GetOwnerName(string targetString)
         {
-            var startSearchId = currentProvinces.ProvinceId;
+            var ownerPattern = new Regex("owner=\"[A-Z]{3}\"");
+            var noOwnerPattern = new Regex("previ");
+
+            if (ownerPattern.IsMatch(targetString))
+                return targetString.Split('\"')[1];
+            else if (noOwnerPattern.IsMatch(targetString))
+                return "_No Owner";
+            else
+                return "Not Province";
+        }
+
+        public void ChangeProvinceParameters(Province currentProvince)
+        {
+            var startSearchId = currentProvince.PositionInFile;
             var closeId = 0;
 
             var regExTax = new Regex("base_tax=");
@@ -174,48 +114,45 @@ namespace Aligres.SaveParser
 
             for (int i = startSearchId; i < startSearchId + 100; i++)
             {
-                currentProvinces.OriginalCulture = SavedDataFile[i].Contains("original_culture")
-                    ? SavedDataFile[i].Split('=')[1]
-                    : currentProvinces.OriginalCulture;
-                currentProvinces.CurrentCulture = SavedDataFile[i].Contains("\tculture")
-                    ? SavedDataFile[i].Split('=')[1]
-                    : currentProvinces.CurrentCulture;
-                currentProvinces.OriginalReligion = SavedDataFile[i].Contains("original_religion")
-                    ? SavedDataFile[i].Split('=')[1]
-                    : currentProvinces.OriginalReligion;
-                currentProvinces.CurrentReligion = SavedDataFile[i].Contains("\treligion")
-                    ? SavedDataFile[i].Split('=')[1]
-                    : currentProvinces.CurrentReligion;
+                currentProvince.OriginalCulture = SaveFile[i].Contains("original_culture")
+                    ? SaveFile[i].Split('=')[1]
+                    : currentProvince.OriginalCulture;
+                currentProvince.CurrentCulture = SaveFile[i].Contains("\tculture")
+                    ? SaveFile[i].Split('=')[1]
+                    : currentProvince.CurrentCulture;
+                currentProvince.OriginalReligion = SaveFile[i].Contains("original_religion")
+                    ? SaveFile[i].Split('=')[1]
+                    : currentProvince.OriginalReligion;
+                currentProvince.CurrentReligion = SaveFile[i].Contains("\treligion")
+                    ? SaveFile[i].Split('=')[1]
+                    : currentProvince.CurrentReligion;
 
-                if (regExTax.IsMatch(SavedDataFile[i]))
+                if (regExTax.IsMatch(SaveFile[i]))
                 {
-                    currentProvinces.Tax = SavedDataFile[i].Split('=')[1];
-                    currentProvinces.TaxId = i;
+                    currentProvince.Tax = SaveFile[i].Split('=')[1];
+                    currentProvince.TaxId = i;
 
                     closeId = i;
-
                     break;
                 }
             }
 
             for (int i = closeId; i < closeId + 10; i++)
             {
-                if (regExProd.IsMatch(SavedDataFile[i]))
+                if (regExProd.IsMatch(SaveFile[i]))
                 {
-                    currentProvinces.Prod = SavedDataFile[i].Split('=')[1];
-                    currentProvinces.ProdId = i;
-
+                    currentProvince.Prod = SaveFile[i].Split('=')[1];
+                    currentProvince.ProdId = i;
                     break;
                 }
             }
 
             for (int i = closeId; i < closeId + 10; i++)
             {
-                if (regExManPow.IsMatch(SavedDataFile[i]))
+                if (regExManPow.IsMatch(SaveFile[i]))
                 {
-                    currentProvinces.ManPow = SavedDataFile[i].Split('=')[1];
-                    currentProvinces.ManPowId = i;
-
+                    currentProvince.ManPow = SaveFile[i].Split('=')[1];
+                    currentProvince.ManPowId = i;
                     break;
                 }
             }
@@ -223,30 +160,19 @@ namespace Aligres.SaveParser
 
         public List<string> CountryChanged(string selectedCountry)
         {
-            var newProvinces = new List<string>();
-
             ProvincesOfCountry.Clear();
-
-            foreach (var province in Provinces.Where(province => selectedCountry == province.OwnerName))
-            {
-                newProvinces.Add(province.ProvinceName);
-                ProvincesOfCountry.Add(province);
-            }
-
-            return newProvinces;
+            ProvincesOfCountry.AddRange(Provinces.Where(province => selectedCountry == province.OwnerName));
+            return ProvincesOfCountry.Select(p => p.Name).ToList();
         }
 
         public Province ProvinceChanged(string provinceName)
         {
             Province tempProvince = new Province();
-            foreach (var province in ProvincesOfCountry.Where(province => provinceName == province.ProvinceName))
+            foreach (var province in ProvincesOfCountry.Where(province => province.Name == provinceName))
             {
                 ChangeProvinceParameters(province);
-
-                CurrentProvince = province.ProvinceIndex;
-
+                CurrentProvince = province.Id;
                 tempProvince = province;
-
                 break;
             }
 

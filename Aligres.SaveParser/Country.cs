@@ -4,11 +4,11 @@
     {
         public Country(string vName = "Useless", int vId = 0)
         {
-            CountryName = vName;
-            CountryId = vId;
+            Name = vName;
+            Id = vId;
         }
 
-        public string CountryName { get; set; }
-        public int CountryId { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
     }
 }

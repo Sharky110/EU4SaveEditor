@@ -2,35 +2,33 @@
 {
     public class Province
     {
-        public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless", int ownId = 0)
+        public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless")
         {
-            ProvinceName = vName;
-            ProvinceId = vId;
-            ProvinceIndex = vIndex;
+            Name = vName;
+            PositionInFile = vId;
+            Id = vIndex;
             OwnerName = owner;
-            OwnerId = ownId;
         }
 
-        public string ProvinceName { get; set; }
-        public int ProvinceId { get; set; } //Province position in file
-        public int ProvinceIndex { get; set; } //Province index from 0 to ...
+        public string Name;
+        public int Id;
+        public int PositionInFile;
 
-        public string OwnerName { get; set; }
-        public int OwnerId { get; set; }
+        public string OwnerName;
 
-        public string Tax { get; set; }
-        public int TaxId { get; set; }
+        public string Tax;
+        public int TaxId;
 
-        public string Prod { get; set; }
-        public int ProdId { get; set; }
+        public string Prod;
+        public int ProdId;
 
-        public string ManPow { get; set; }
-        public int ManPowId { get; set; }
+        public string ManPow;
+        public int ManPowId;
 
-        public string OriginalCulture { get; set; }
-        public string CurrentCulture { get; set; }
+        public string OriginalCulture;
+        public string CurrentCulture;
 
-        public string OriginalReligion { get; set; }
-        public string CurrentReligion { get; set; }
+        public string OriginalReligion;
+        public string CurrentReligion;
     }
 }
