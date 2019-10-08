@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Aligres.SaveParser;
+using System.Threading.Tasks;
 
 namespace EU4SaveEditor
 {
@@ -47,7 +48,7 @@ namespace EU4SaveEditor
             tbCurrentReligion.Text = province.CurrentReligion;
         }
 
-        public void OpenFile(ListBox lbCountries, ListBox lbProvinces, Label labelLoadedFile, Label labelCountriesCount)
+        public async void OpenFile(ListBox lbCountries, ListBox lbProvinces, Label labelLoadedFile, Label labelCountriesCount)
         {
             string fileName;
             using (var openFileDialog = new OpenFileDialog() { Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter") })
@@ -62,7 +63,7 @@ namespace EU4SaveEditor
 
             labelLoadedFile.Text = fileName;
 
-            var sourceFile = File.ReadAllText(fileName, Encoding.GetEncoding(1252));
+            var sourceFile = await Task.Run(() => File.ReadAllText(fileName, Encoding.GetEncoding(1252)));
 
             _saveParser.SaveFile = sourceFile.Split('\n');
 
@@ -71,10 +72,9 @@ namespace EU4SaveEditor
             lbCountries.Items.Clear();
             lbProvinces.Items.Clear();
 
-            _saveParser.FindAllCountries();
-            _saveParser.FindAllProvinces();
+            await Task.Run(() => _saveParser.FindAllCountries());
+            await Task.Run(() => _saveParser.FindAllProvinces());
             var listOfCountries = _saveParser.GetCountries();
-
             AddValsToListBox(listOfCountries, lbCountries);
 
             labelCountriesCount.Text = lbCountries.Items.Count.ToString();
@@ -104,7 +104,7 @@ namespace EU4SaveEditor
             streamWriter.Close();
         }
 
-        public void SetPoints(ref object sender, ListBox lbProvinces)
+        public void SetPoints(object sender, ListBox lbProvinces)
         {
             if (string.IsNullOrEmpty(_saveParser.FilePath))
                 return;
@@ -159,7 +159,7 @@ namespace EU4SaveEditor
             }
         }
 
-        public void KeyPress(ref KeyPressEventArgs e)
+        public void KeyPress(KeyPressEventArgs e)
         {
             if ((e.KeyChar <= 47 || e.KeyChar >= 58) && e.KeyChar != 8 && e.KeyChar != 46) //numbers, BackSpace and ASCII point
             {
@@ -167,7 +167,7 @@ namespace EU4SaveEditor
             }
         }
 
-        public void FindCountry(string text, ref ListBox lbCountries)
+        public void FindCountry(string text, ListBox lbCountries)
         {
             for (int i = 0; i < lbCountries.Items.Count; i++)
             {

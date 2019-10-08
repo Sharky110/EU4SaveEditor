@@ -113,21 +113,19 @@
             // labelCountriesCount
             // 
             this.labelCountriesCount.AutoSize = true;
-            this.labelCountriesCount.Location = new System.Drawing.Point(141, 101);
+            this.labelCountriesCount.Location = new System.Drawing.Point(102, 101);
             this.labelCountriesCount.Name = "labelCountriesCount";
-            this.labelCountriesCount.Size = new System.Drawing.Size(76, 13);
+            this.labelCountriesCount.Size = new System.Drawing.Size(0, 13);
             this.labelCountriesCount.TabIndex = 11;
-            this.labelCountriesCount.Text = "CountiesCount";
             this.labelCountriesCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelProvincesCount
             // 
             this.labelProvincesCount.AutoSize = true;
-            this.labelProvincesCount.Location = new System.Drawing.Point(349, 101);
+            this.labelProvincesCount.Location = new System.Drawing.Point(322, 101);
             this.labelProvincesCount.Name = "labelProvincesCount";
-            this.labelProvincesCount.Size = new System.Drawing.Size(82, 13);
+            this.labelProvincesCount.Size = new System.Drawing.Size(0, 13);
             this.labelProvincesCount.TabIndex = 12;
-            this.labelProvincesCount.Text = "ProvincesCount";
             this.labelProvincesCount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // gbProvProsp
@@ -382,10 +380,7 @@
         #endregion
         private System.Windows.Forms.Label labelChooseCountry;
         private System.Windows.Forms.Label labelLoadedFile;
-        private System.Windows.Forms.ListBox lbCountries;
-        private System.Windows.Forms.ListBox lbProvinces;
         private System.Windows.Forms.Label labelChooseProvince;
-        private System.Windows.Forms.Label labelCountriesCount;
         private System.Windows.Forms.Label labelProvincesCount;
         private System.Windows.Forms.GroupBox gbProvProsp;
         private System.Windows.Forms.TextBox tbDip;
@@ -410,6 +405,9 @@
         private System.Windows.Forms.Label labelOrigRlgn;
         private System.Windows.Forms.TextBox tbRlgn;
         private System.Windows.Forms.TextBox tbOrigRlgn;
+        private System.Windows.Forms.ListBox lbCountries;
+        private System.Windows.Forms.ListBox lbProvinces;
+        public System.Windows.Forms.Label labelCountriesCount;
     }
 }
 

@@ -34,12 +34,12 @@ namespace EU4SaveEditor
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
-            _formViewModel.SetPoints(ref sender, lbProvinces);
+            _formViewModel.SetPoints(sender, lbProvinces);
         }
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            _formViewModel.KeyPress(ref e);
+            _formViewModel.KeyPress(e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -54,7 +54,7 @@ namespace EU4SaveEditor
 
         private void tbSearchCountry_TextChanged(object sender, EventArgs e)
         {
-            _formViewModel.FindCountry((sender as TextBox)?.Text, ref lbCountries);
+            _formViewModel.FindCountry((sender as TextBox)?.Text, lbCountries);
         }
     }
 }
