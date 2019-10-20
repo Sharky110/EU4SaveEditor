@@ -5,7 +5,7 @@ namespace EU4SaveEditor
 {
     public partial class Form1 : Form
     {
-        readonly FormVM _formViewModel = new FormVM();
+        readonly FormVM _formVM = new FormVM();
 
         public Form1()
         {
@@ -14,32 +14,32 @@ namespace EU4SaveEditor
 
         private void ListBoxCountries_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _formViewModel.CountryChanged(lbCountries.SelectedItem.ToString(), lbProvinces, labelProvincesCount);
+            _formVM.CountryChanged(lbCountries.SelectedItem.ToString(), lbProvinces, labelProvincesCount);
         }
 
         private void ListBoxProvinces_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _formViewModel.ProvinceChanged(lbProvinces, gbProvProsp, tbOrigCltr, tbCltr, tbOrigRlgn, tbRlgn);
+            _formVM.ProvinceChanged(lbProvinces, gbProvProsp, tbOrigCltr, tbCltr, tbOrigRlgn, tbRlgn);
         }
 
         private void openFile_Click(object sender, EventArgs e)
         {
-            _formViewModel.OpenFile(lbCountries, lbProvinces, labelLoadedFile, labelCountriesCount);
+            _formVM.OpenFile(lbCountries, lbProvinces, labelLoadedFile, labelCountriesCount);
         }
 
         private void saveFile_Click(object sender, EventArgs e)
         {
-            _formViewModel.SaveFile();
+            _formVM.SaveFile();
         }
 
         private void textBox_TextChanged(object sender, EventArgs e)
         {
-            _formViewModel.SetPoints(sender, lbProvinces);
+            _formVM.SetPoints(sender, lbProvinces);
         }
 
         private void textBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            _formViewModel.KeyPress(e);
+            _formVM.KeyPress(e);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -49,12 +49,12 @@ namespace EU4SaveEditor
 
         private void btnSaveFile_Click(object sender, EventArgs e)
         {
-            _formViewModel.SaveFile();
+            _formVM.SaveFile();
         }
 
         private void tbSearchCountry_TextChanged(object sender, EventArgs e)
         {
-            _formViewModel.FindCountry((sender as TextBox)?.Text, lbCountries);
+            _formVM.FindCountry((sender as TextBox)?.Text, lbCountries);
         }
     }
 }
