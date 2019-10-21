@@ -59,7 +59,7 @@ namespace EU4SaveEditor
                 fileName = openFileDialog.FileName;
             }
 
-            _saveParser.FilePath = fileName;
+           // _saveParser.FilePath = fileName;
 
             labelLoadedFile.Text = fileName;
 
@@ -82,11 +82,11 @@ namespace EU4SaveEditor
 
         public void SaveFile()
         {
-            if (string.IsNullOrEmpty(_saveParser.FilePath))
-            {
-                MessageBox.Show("File not opened.", "Error.");
-                return;
-            }
+            //if (string.IsNullOrEmpty(_saveParser.FilePath))
+           // {
+           //     MessageBox.Show("File not opened.", "Error.");
+           //     return;
+           // }
             string saveFile;
             using (var saveFileDialog = new SaveFileDialog() { Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")})
             {
@@ -106,8 +106,8 @@ namespace EU4SaveEditor
 
         public void SetPoints(object sender, ListBox lbProvinces)
         {
-            if (string.IsNullOrEmpty(_saveParser.FilePath))
-                return;
+            //if (string.IsNullOrEmpty(_saveParser.FilePath))
+           //     return;
 
             if (lbProvinces.SelectedItems.Count == 1)
             {

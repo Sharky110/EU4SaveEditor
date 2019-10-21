@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EU4SaveEditorWPF.ViewModels;
 
 namespace EU4SaveEditorWPF
 {
@@ -20,20 +21,10 @@ namespace EU4SaveEditorWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly WindowVM _windowVM = new WindowVM();
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void OpenFile_Click(object sender, RoutedEventArgs e)
-        {
-            _windowVM.OpenFile(lbCountries, lbProvinces,lblFilePath );
-        }
-
-        private void lbCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            _windowVM.CountryChanged(lbCountries.SelectedItem.ToString(), lbProvinces);
+            DataContext = new SaveEditorVM();
         }
     }
 }

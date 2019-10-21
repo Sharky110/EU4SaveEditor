@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Europa universalis 4 Save Editor" Height="500" Width="800" Background="#FFDADADA">
     <Grid>
-        <ListBox x:Name="lbCountries" HorizontalAlignment="Left" Height="300" 
-                 Margin="10,150,0,0" VerticalAlignment="Top" Width="200" SelectionChanged="lbCountries_SelectionChanged"/>
-        <ListBox x:Name="lbProvinces" HorizontalAlignment="Left" Height="300" 
+        <ListBox x:Name="lbCountries" HorizontalAlignment="Left" Height="300" ItemsSource="{Binding Path=ListOfCountries}"
+                 Margin="10,150,0,0" VerticalAlignment="Top" Width="200"/>
+        <ListBox x:Name="lbProvinces" HorizontalAlignment="Left" Height="300" ItemsSource="{Binding Path=ListOfProvinces}"
                  Margin="215,150,0,0" VerticalAlignment="Top" Width="200"/>
         <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" 
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
@@ -21,7 +21,7 @@
                Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
         <Menu x:Name="Menu" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="2">
             <MenuItem x:Name="MenuFile" Header="File">
-                <MenuItem x:Name="OpenFile" Header="Open file" Click="OpenFile_Click"/>
+                <MenuItem x:Name="OpenFile" Header="Open file" Command="{Binding Path=OpenFileCommand}"/>
                 <MenuItem x:Name="SaveFile" Header="Save file"/>
             </MenuItem>
         </Menu>
@@ -29,7 +29,8 @@
                Margin="78,119,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblCounriesCount_Copy" Content="{Binding Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
             Margin="283,119,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblFilePath" Content="FilePath" HorizontalAlignment="Left" Margin="10,25,0,0" VerticalAlignment="Top" Height="30"/>
+        <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="{Binding Path=FilePath}"
+               Margin="10,25,0,0" VerticalAlignment="Top" Height="30"/>
         <Canvas x:Name="canvasParameters" HorizontalAlignment="Left" Height="300" Margin="439,150,0,0" VerticalAlignment="Top" Width="330">
             <Label x:Name="lblMil" Content="Base Manpower" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="62"/>
             <Label x:Name="lblAdm" Content="Base Tax" HorizontalAlignment="Left" VerticalAlignment="Top" Width="63" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>

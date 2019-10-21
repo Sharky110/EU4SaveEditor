@@ -13,7 +13,6 @@ namespace Aligres.SaveParser
         public readonly List<Province> ProvincesOfCountry;
         public readonly List<int> SelectedProvincesId;
         public int CurrentProvince;
-        public string FilePath;
         public string[] SaveFile;
 
         #endregion --------------------------------------------------------------------------------
@@ -87,7 +86,9 @@ namespace Aligres.SaveParser
 
         public List<string> GetCountries()
         {
-            return Provinces.Select(p => p.OwnerName).Distinct().ToList();
+            var list = Provinces.Select(p => p.OwnerName).Distinct().ToList();
+            list.Sort();
+            return list;
         }
 
         private string GetOwnerName(string targetString)
