@@ -130,8 +130,8 @@ namespace Aligres.SaveParser
 
                 if (regExTax.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.Tax = SaveFile[i].Split('=')[1];
-                    currentProvince.TaxId = i;
+                    currentProvince.Adm = SaveFile[i].Split('=')[1];
+                    currentProvince.AdmId = i;
 
                     closeId = i;
                     break;
@@ -142,8 +142,8 @@ namespace Aligres.SaveParser
             {
                 if (regExProd.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.Prod = SaveFile[i].Split('=')[1];
-                    currentProvince.ProdId = i;
+                    currentProvince.Dip = SaveFile[i].Split('=')[1];
+                    currentProvince.DipId = i;
                     break;
                 }
             }
@@ -152,8 +152,8 @@ namespace Aligres.SaveParser
             {
                 if (regExManPow.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.ManPow = SaveFile[i].Split('=')[1];
-                    currentProvince.ManPowId = i;
+                    currentProvince.Mil = SaveFile[i].Split('=')[1];
+                    currentProvince.MilId = i;
                     break;
                 }
             }

@@ -6,13 +6,15 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using Aligres.SaveParser;
 using System.Threading.Tasks;
+using System;
 
 namespace EU4SaveEditor
 {
     internal class FormVM
     {
         private readonly SaveParser _saveParser = SaveParser.GetInstance();
-
+        
+        [Obsolete]
         private static void AddValsToListBox(IEnumerable<string> list, ListBox listBox)
         {
             foreach (var str in list)
@@ -21,6 +23,7 @@ namespace EU4SaveEditor
             }
         }
 
+        [Obsolete]
         public void CountryChanged(string country, ListBox lbProvinces, Label labelProvincesCount )
         {
             var newProvinces = _saveParser.GetProvincesOfContry(country);
@@ -31,6 +34,7 @@ namespace EU4SaveEditor
             labelProvincesCount.Text = newProvinces.Count().ToString();
         }
 
+        [Obsolete]
         public void ProvinceChanged(ListBox lbProvinces, GroupBox gbProvinceProsperity, TextBox tbOriginalCulture,
             TextBox tbCurrentCulture, TextBox tbOriginalReligion, TextBox tbCurrentReligion)
         {
@@ -38,9 +42,9 @@ namespace EU4SaveEditor
                 return;
             var province = _saveParser.GetProvince(lbProvinces.SelectedItem.ToString());
 
-            ((TextBox)gbProvinceProsperity.Controls["tbAdm"]).Text = province.Tax;
-            ((TextBox)gbProvinceProsperity.Controls["tbDip"]).Text = province.Prod;
-            ((TextBox)gbProvinceProsperity.Controls["tbMil"]).Text = province.ManPow;
+            ((TextBox)gbProvinceProsperity.Controls["tbAdm"]).Text = province.Adm;
+            ((TextBox)gbProvinceProsperity.Controls["tbDip"]).Text = province.Dip;
+            ((TextBox)gbProvinceProsperity.Controls["tbMil"]).Text = province.Mil;
 
             tbOriginalCulture.Text = province.OriginalCulture;
             tbCurrentCulture.Text = province.CurrentCulture;
@@ -48,6 +52,7 @@ namespace EU4SaveEditor
             tbCurrentReligion.Text = province.CurrentReligion;
         }
 
+        [Obsolete]
         public async void OpenFile(ListBox lbCountries, ListBox lbProvinces, Label labelLoadedFile, Label labelCountriesCount)
         {
             string fileName;
@@ -80,6 +85,7 @@ namespace EU4SaveEditor
             labelCountriesCount.Text = lbCountries.Items.Count.ToString();
         }
 
+        [Obsolete]
         public void SaveFile()
         {
             //if (string.IsNullOrEmpty(_saveParser.FilePath))
@@ -114,15 +120,15 @@ namespace EU4SaveEditor
                 switch ((sender as TextBox)?.Name)
                 {
                     case "tbAdm":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].TaxId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].AdmId] = 
                             "    base_tax=" + ((TextBox)sender).Text;
                         break;
                     case "tbDip":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].ProdId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].DipId] = 
                             "    base_production=" + ((TextBox)sender).Text;
                         break;
                     case "tbMil":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].ManPowId] = 
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].MilId] = 
                             "    base_manpower=" + ((TextBox)sender).Text;
                         break;
                 }
@@ -143,15 +149,15 @@ namespace EU4SaveEditor
                     switch ((sender as TextBox)?.Name)
                     {
                         case "tbAdm":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].TaxId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].AdmId] = 
                                 "    base_tax=" + ((TextBox)sender).Text;
                             break;
                         case "tbDip":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].ProdId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].DipId] = 
                                 "    base_production=" + ((TextBox)sender).Text;
                             break;
                         case "tbMil":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].ManPowId] = 
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].MilId] = 
                                 "    base_manpower=" + ((TextBox)sender).Text;
                             break;
                     }
@@ -166,6 +172,7 @@ namespace EU4SaveEditor
                 e.Handled = true;
             }
         }
+
 
         public void FindCountry(string text, ListBox lbCountries)
         {

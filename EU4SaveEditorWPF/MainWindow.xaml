@@ -7,49 +7,67 @@
         mc:Ignorable="d"
         Title="Europa universalis 4 Save Editor" Height="500" Width="800" Background="#FFDADADA">
     <Grid>
-        <ListBox x:Name="lbCountries" HorizontalAlignment="Left" Height="300" ItemsSource="{Binding Path=ListOfCountries}"
-                 Margin="10,150,0,0" VerticalAlignment="Top" Width="200"/>
-        <ListBox x:Name="lbProvinces" HorizontalAlignment="Left" Height="300" ItemsSource="{Binding Path=ListOfProvinces}"
-                 Margin="215,150,0,0" VerticalAlignment="Top" Width="200"/>
+        <Menu x:Name="Menu" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="2">
+            <MenuItem x:Name="MenuFile" Header="File">
+                <MenuItem x:Name="OpenFile" Header="Open file" Command="{Binding Path=OpenFileCommand}"/>
+                <MenuItem x:Name="SaveFile" Header="Save file" Command="{Binding Path=SaveFileCommand}"/>
+            </MenuItem>
+        </Menu>
+        <Label x:Name="lblSearchCountries" Content="Search country:" HorizontalAlignment="Left" 
+               Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
         <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" 
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
+
+        <Label x:Name="lblCounriesCount" Content="{Binding Path=Items.Count, ElementName=lbCountries}" HorizontalAlignment="Left" 
+               Margin="78,119,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="lbCountries" SelectedItem="{ Binding Path=CurrentCountry}" SelectedValue="{Binding Path=FoundCountry}"
+                  ItemsSource="{Binding Path=ListOfCountries}" HorizontalAlignment="Left" Height="300" Margin="10,150,0,0" 
+                 VerticalAlignment="Top" Width="200"/>
+
+        <Label x:Name="lblCounriesCount_Copy" Content="{Binding Path=Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
+            Margin="283,119,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="lbProvinces" HorizontalAlignment="Left" Height="300" SelectedItem="{Binding Path=CurrentProvinceName}" 
+                 ItemsSource="{Binding Path=ListOfProvinces}"
+                 Margin="215,150,0,0" VerticalAlignment="Top" Width="200"/>
+        
         <Label x:Name="lblCountries" Content="Countries:" HorizontalAlignment="Left" 
                Margin="10,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
         <Label x:Name="lblProvinces" Content="Provinces:" HorizontalAlignment="Left" 
                Margin="215,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
-        <Label x:Name="lblSearchCountries" Content="Search country:" HorizontalAlignment="Left" 
-               Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
-        <Menu x:Name="Menu" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="792" Grid.ColumnSpan="2">
-            <MenuItem x:Name="MenuFile" Header="File">
-                <MenuItem x:Name="OpenFile" Header="Open file" Command="{Binding Path=OpenFileCommand}"/>
-                <MenuItem x:Name="SaveFile" Header="Save file"/>
-            </MenuItem>
-        </Menu>
-        <Label x:Name="lblCounriesCount" Content="{Binding Items.Count, ElementName=lbCountries}" HorizontalAlignment="Left" 
-               Margin="78,119,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblCounriesCount_Copy" Content="{Binding Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
-            Margin="283,119,0,0" VerticalAlignment="Top"/>
+        
         <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="{Binding Path=FilePath}"
                Margin="10,25,0,0" VerticalAlignment="Top" Height="30"/>
         <Canvas x:Name="canvasParameters" HorizontalAlignment="Left" Height="300" Margin="439,150,0,0" VerticalAlignment="Top" Width="330">
-            <Label x:Name="lblMil" Content="Base Manpower" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="62"/>
-            <Label x:Name="lblAdm" Content="Base Tax" HorizontalAlignment="Left" VerticalAlignment="Top" Width="63" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-            <Label x:Name="lblDip" Content="Base Production" HorizontalAlignment="Left" VerticalAlignment="Top" Width="101" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="31"/>
-            <TextBox x:Name="tbMil" HorizontalAlignment="Left" 
-                     Height="23" TextWrapping="Wrap" Text="" VerticalAlignment="Top" 
-                     Width="120" Canvas.Left="114" Canvas.Top="66"/>
+            <Label x:Name="lblAdm" Content="Base Tax" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Width="63" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <TextBox x:Name="tbAdm" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" 
-                     Text="" VerticalAlignment="Top" Width="120" Canvas.Left="114" Canvas.Top="4"/>
-            <TextBox x:Name="tbDip" Height="23" TextWrapping="Wrap" Text="TextBox"
+                     Text="{Binding Path=CurrentProvince.Adm}" VerticalAlignment="Top" Width="120" Canvas.Left="114" Canvas.Top="4"/>
+            
+            <Label x:Name="lblDip" Content="Base Production" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Width="101" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="31"/>
+            <TextBox x:Name="tbDip" Height="23" TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.Dip}" 
                      VerticalAlignment="Top" RenderTransformOrigin="1.067,1.739" HorizontalAlignment="Left" Width="120" Canvas.Left="114" Canvas.Top="35"/>
+            
+            <Label x:Name="lblMil" Content="Base Manpower" HorizontalAlignment="Left" VerticalAlignment="Top" 
+                   Width="101" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Canvas.Top="62"/>
+            <TextBox x:Name="tbMil" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.Mil}" 
+                     VerticalAlignment="Top" Width="120" Canvas.Left="114" Canvas.Top="66"/>
+            
             <Label Content="Original Religion" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="218"/>
-            <TextBox x:Name="tbOriginalReligion" Height="23" Canvas.Left="114" TextWrapping="Wrap" Text="TextBox" Canvas.Top="222" Width="120"/>
+            <TextBox x:Name="tbOriginalReligion" Height="23" Canvas.Left="114" 
+                     TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.OriginalReligion}" Canvas.Top="222" Width="120"/>
+            
             <Label Content="Current Religion" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="249"/>
-            <TextBox x:Name="tbCurrentReligion" Height="23" Canvas.Left="114" TextWrapping="Wrap" Text="TextBox" Canvas.Top="253" Width="120"/>
+            <TextBox x:Name="tbCurrentReligion" Height="23" Canvas.Left="114" 
+                     TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.CurrentReligion}" Canvas.Top="253" Width="120"/>
+            
             <Label Content="Current Culture" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="176"/>
-            <TextBox x:Name="tbCurrentCulture" Height="23" Canvas.Left="114" TextWrapping="Wrap" Text="TextBox" Canvas.Top="180" Width="120"/>
+            <TextBox x:Name="tbCurrentCulture" Height="23" Canvas.Left="114" 
+                     TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.OriginalCulture}" Canvas.Top="180" Width="120"/>
+            
             <Label Content="Original Culture" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Top="145"/>
-            <TextBox x:Name="tbOriginalCulture" Height="23" Canvas.Left="114" TextWrapping="Wrap" Text="TextBox" Canvas.Top="149" Width="120"/>
+            <TextBox x:Name="tbOriginalCulture" Height="23" Canvas.Left="114" 
+                     TextWrapping="Wrap" Text="{Binding Path=CurrentProvince.CurrentCulture}" Canvas.Top="149" Width="120"/>
         </Canvas>
         
 

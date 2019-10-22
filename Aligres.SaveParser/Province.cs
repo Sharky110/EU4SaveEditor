@@ -16,19 +16,19 @@
 
         public string OwnerName;
 
-        public string Tax;
-        public int TaxId;
+        public string Adm { get; set; }
+        public int AdmId;
 
-        public string Prod;
-        public int ProdId;
+        public string Dip { get; set; }
+        public int DipId;
 
-        public string ManPow;
-        public int ManPowId;
+        public string Mil { get; set; }
+        public int MilId;
 
-        public string OriginalCulture;
-        public string CurrentCulture;
+        public string OriginalCulture { get; set; }
+        public string CurrentCulture { get; set; }
 
-        public string OriginalReligion;
-        public string CurrentReligion;
+        public string OriginalReligion { get; set; }
+        public string CurrentReligion { get; set; }
     }
 }
