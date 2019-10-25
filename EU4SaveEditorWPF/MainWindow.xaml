@@ -24,7 +24,7 @@
                   ItemsSource="{Binding Path=ListOfCountries}" HorizontalAlignment="Left" Height="300" Margin="10,150,0,0" 
                  VerticalAlignment="Top" Width="200"/>
 
-        <Label x:Name="lblCounriesCount_Copy" Content="{Binding Path=Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
+        <Label x:Name="lblProvincesCount" Content="{Binding Path=Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
             Margin="283,119,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbProvinces" HorizontalAlignment="Left" Height="300" SelectedItem="{Binding Path=CurrentProvinceName}" 
                  ItemsSource="{Binding Path=ListOfProvinces}"

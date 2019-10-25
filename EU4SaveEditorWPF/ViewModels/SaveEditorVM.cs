@@ -82,6 +82,7 @@ namespace EU4SaveEditorWPF.ViewModels
             get => _currentProvince;
             set
             {
+                //SetPoints();
                 SetProperty(ref _currentProvince, value);
             }
         }
@@ -195,6 +196,61 @@ namespace EU4SaveEditorWPF.ViewModels
         public void SetCurrentProvince()
         {
             CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
+        }
+
+        public void SetPoints(object sender, ListBox lbProvinces)
+        {
+            if (string.IsNullOrEmpty(FilePath))
+                 return;
+
+            if (lbProvinces.SelectedItems.Count == 1)
+            {
+                switch ((sender as TextBox)?.Name)
+                {
+                    case "tbAdm":
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].AdmId] =
+                            "    base_tax=" + ((TextBox)sender).Text;
+                        break;
+                    case "tbDip":
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].DipId] =
+                            "    base_production=" + ((TextBox)sender).Text;
+                        break;
+                    case "tbMil":
+                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].MilId] =
+                            "    base_manpower=" + ((TextBox)sender).Text;
+                        break;
+                }
+            }
+            else if (lbProvinces.SelectedItems.Count > 1)
+            {
+                _saveParser.SelectedProvincesId.Clear();
+                foreach (var province in _saveParser.ProvincesOfCountry)
+                {
+                    if (lbProvinces.SelectedItems.Cast<object>().Any(provinceItem => provinceItem.ToString() == province.Name))
+                    {
+                        _saveParser.ChangeProvinceParameters(province);
+                        _saveParser.SelectedProvincesId.Add(province.Id);
+                    }
+                }
+                foreach (var provinceId in _saveParser.SelectedProvincesId)
+                {
+                    switch ((sender as TextBox)?.Name)
+                    {
+                        case "tbAdm":
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].AdmId] =
+                                "    base_tax=" + ((TextBox)sender).Text;
+                            break;
+                        case "tbDip":
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].DipId] =
+                                "    base_production=" + ((TextBox)sender).Text;
+                            break;
+                        case "tbMil":
+                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].MilId] =
+                                "    base_manpower=" + ((TextBox)sender).Text;
+                            break;
+                    }
+                }
+            }
         }
 
         #region Helpers
