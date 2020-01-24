@@ -110,6 +110,7 @@ namespace EU4SaveEditor
             streamWriter.Close();
         }
 
+        [Obsolete]
         public void SetPoints(object sender, ListBox lbProvinces)
         {
             //if (string.IsNullOrEmpty(_saveParser.FilePath))

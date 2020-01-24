@@ -1,18 +1,16 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using Aligres.SaveParser;
+using Microsoft.Win32;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Configuration;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.IO;
-using System.Windows.Input;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
-using Aligres.SaveParser;
-using EU4SaveEditorWPF.Commands;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Linq;
 
-namespace EU4SaveEditorWPF.ViewModels
+namespace EU4SaveEditorWPF
 {
     class SaveEditorVM : SaveEditorVMBase
     {
@@ -43,35 +41,26 @@ namespace EU4SaveEditorWPF.ViewModels
         public List<string> ListOfCountries
         {
             get => _listOfCountries;
-            set 
-            { 
-                SetProperty(ref _listOfCountries, value); 
-            }
+            set => SetProperty(ref _listOfCountries, value); 
         }
 
         public List<string> ListOfProvinces
         {
             get => _listOfProvinces;
-            set
-            {
-                SetProperty(ref _listOfProvinces, value); 
-            }
+            set => SetProperty(ref _listOfProvinces, value);
         }
 
         public string FilePath
         {
             get => _filePath;
-            set 
-            { 
-                SetProperty(ref _filePath, value);
-            }
+            set => SetProperty(ref _filePath, value); 
         }
 
         public string CurrentCountry
         {
             get => _currentCountry;
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _currentCountry, value);
                 GetProvincesOfCountry();
             }
@@ -79,12 +68,12 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public Province CurrentProvince
         {
-            get => _currentProvince;
-            set
+            get
             {
-                //SetPoints();
-                SetProperty(ref _currentProvince, value);
+                SetPoints();
+                return _currentProvince;
             }
+            set => SetProperty(ref _currentProvince, value);
         }
 
         public string CurrentProvinceName
@@ -100,10 +89,7 @@ namespace EU4SaveEditorWPF.ViewModels
         public string FoundCountry
         {
             get => _foundCountry;
-            set
-            {
-                SetProperty(ref _foundCountry, value);
-            }
+            set => SetProperty(ref _foundCountry, value);
         }
 
         #endregion
@@ -117,26 +103,23 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public SaveEditorVM()
         {
-            ListOfCountries = new List<string>();
-            ListOfProvinces = new List<string>();
-
             OpenFileCommand = new RelayCommand(c => OpenFile());
             SaveFileCommand = new RelayCommand(c => SaveFile());
         }
 
         public async void OpenFile()
         {
-            var openFileDialog = new OpenFileDialog() 
-            { 
-                Filter = ConfigurationManager.AppSettings.Get(DialogFilter) 
+            var openFileDialog = new OpenFileDialog()
+            {
+                Filter = ConfigurationManager.AppSettings.Get(DialogFilter)
             };
-            
+
             openFileDialog.ShowDialog();
             if (openFileDialog.FileName == string.Empty)
                 return;
 
             FilePath = openFileDialog.FileName;
-            
+
             var sourceFile = await Task.Run(() => File.ReadAllText(FilePath, Encoding.GetEncoding(1252)));
 
             _saveParser.SaveFile = sourceFile.Split('\n');
@@ -158,7 +141,7 @@ namespace EU4SaveEditorWPF.ViewModels
             }
             var saveFileDialog = new SaveFileDialog()
             {
-                Filter = ConfigurationManager.AppSettings.Get("FileDialogFilter")
+                Filter = ConfigurationManager.AppSettings.Get(DialogFilter)
             };
 
             saveFileDialog.ShowDialog();
@@ -198,71 +181,14 @@ namespace EU4SaveEditorWPF.ViewModels
             CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
         }
 
-        public void SetPoints(object sender, ListBox lbProvinces)
+        public void SetPoints()
         {
-            if (string.IsNullOrEmpty(FilePath))
-                 return;
+            if (string.IsNullOrEmpty(FilePath) || _currentProvince.Adm == null)
+                return;
 
-            if (lbProvinces.SelectedItems.Count == 1)
-            {
-                switch ((sender as TextBox)?.Name)
-                {
-                    case "tbAdm":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].AdmId] =
-                            "    base_tax=" + ((TextBox)sender).Text;
-                        break;
-                    case "tbDip":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].DipId] =
-                            "    base_production=" + ((TextBox)sender).Text;
-                        break;
-                    case "tbMil":
-                        _saveParser.SaveFile[_saveParser.Provinces[_saveParser.CurrentProvince].MilId] =
-                            "    base_manpower=" + ((TextBox)sender).Text;
-                        break;
-                }
-            }
-            else if (lbProvinces.SelectedItems.Count > 1)
-            {
-                _saveParser.SelectedProvincesId.Clear();
-                foreach (var province in _saveParser.ProvincesOfCountry)
-                {
-                    if (lbProvinces.SelectedItems.Cast<object>().Any(provinceItem => provinceItem.ToString() == province.Name))
-                    {
-                        _saveParser.ChangeProvinceParameters(province);
-                        _saveParser.SelectedProvincesId.Add(province.Id);
-                    }
-                }
-                foreach (var provinceId in _saveParser.SelectedProvincesId)
-                {
-                    switch ((sender as TextBox)?.Name)
-                    {
-                        case "tbAdm":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].AdmId] =
-                                "    base_tax=" + ((TextBox)sender).Text;
-                            break;
-                        case "tbDip":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].DipId] =
-                                "    base_production=" + ((TextBox)sender).Text;
-                            break;
-                        case "tbMil":
-                            _saveParser.SaveFile[_saveParser.Provinces[provinceId].MilId] =
-                                "    base_manpower=" + ((TextBox)sender).Text;
-                            break;
-                    }
-                }
-            }
+            _saveParser.SaveFile[_currentProvince.AdmId] = "    base_tax=" + _currentProvince.Adm;
+            _saveParser.SaveFile[_currentProvince.DipId] = "    base_production=" + _currentProvince.Dip;
+            _saveParser.SaveFile[_currentProvince.MilId] = "    base_manpower=" + _currentProvince.Mil;
         }
-
-        #region Helpers
-
-        private static void AddValsToListBox(IEnumerable<string> list, ListBox listBox)
-        {
-            foreach (var str in list)
-            {
-                listBox.Items.Add(str);
-            }
-        }
-
-        #endregion
     }
 }

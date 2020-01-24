@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace EU4SaveEditorWPF.ViewModels
+namespace EU4SaveEditorWPF
 {
     class SaveEditorVMBase : INotifyPropertyChanged
     {
