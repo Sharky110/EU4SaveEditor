@@ -171,15 +171,9 @@ namespace EU4SaveEditorWPF
             }
         }
 
-        public void GetProvincesOfCountry()
-        {
-            ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
-        }
+        public void GetProvincesOfCountry() => ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
 
-        public void SetCurrentProvince()
-        {
-            CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
-        }
+        public void SetCurrentProvince() => CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
 
         public void SetPoints()
         {

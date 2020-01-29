@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using EU4SaveEditorWPF.ViewModels;
 
 namespace EU4SaveEditorWPF
 {
@@ -25,6 +24,11 @@ namespace EU4SaveEditorWPF
         {
             InitializeComponent();
             DataContext = new SaveEditorVM();
+        }
+
+        private void textBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !(char.IsDigit(e.Text, 0));
         }
     }
 }
