@@ -115,7 +115,7 @@ namespace EU4SaveEditorWPF
             };
 
             openFileDialog.ShowDialog();
-            if (openFileDialog.FileName == string.Empty)
+            if (string.IsNullOrEmpty(openFileDialog.FileName))
                 return;
 
             FilePath = openFileDialog.FileName;
@@ -145,7 +145,7 @@ namespace EU4SaveEditorWPF
             };
 
             saveFileDialog.ShowDialog();
-            if (saveFileDialog.FileName == string.Empty)
+            if (string.IsNullOrEmpty(saveFileDialog.FileName))
                 return;
 
             var saveFile = saveFileDialog.FileName;
@@ -171,9 +171,14 @@ namespace EU4SaveEditorWPF
             }
         }
 
-        public void GetProvincesOfCountry() => ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
-
-        public void SetCurrentProvince() => CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
+        public void GetProvincesOfCountry()
+        {
+            ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
+        }
+        public void SetCurrentProvince()
+        {
+            CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
+        }
 
         public void SetPoints()
         {
