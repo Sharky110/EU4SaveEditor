@@ -2,12 +2,12 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/EU4SaveEditor/v15
+/.vs
 
 #
 *.exe
 
 
 #Bin Debug Release
-/EU4SaveEditor/obj
-/EU4SaveEditor/bin
+*/obj
+*/bin
