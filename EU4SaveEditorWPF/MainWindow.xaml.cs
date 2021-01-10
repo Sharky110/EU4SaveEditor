@@ -1,5 +1,6 @@
 ﻿using EU4SaveEditorWPF.ViewModels;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace EU4SaveEditorWPF
@@ -18,6 +19,13 @@ namespace EU4SaveEditorWPF
         private void textBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !(char.IsDigit(e.Text, 0));
+        }
+
+        private void lbCountries_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var newSelectedItem = e.AddedItems[0];
+            if (newSelectedItem != null)
+                (sender as ListBox).ScrollIntoView(newSelectedItem);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace EU4SaveEditorWPF.ViewModels
         public readonly List<Province> Provinces;
         public readonly List<Province> ProvincesOfCountry;
         public readonly List<int> SelectedProvincesId;
+        public string PlayerCountry;
         public int CurrentProvince;
         
 
@@ -63,20 +64,15 @@ namespace EU4SaveEditorWPF.ViewModels
             {
                 index++;
 
-                if (str.Length < 4)
+                if (str.Length < 6)
                     continue;
 
-                if (countryRegEx.IsMatch(str))
-                {
+                if(index < 20 && str.Contains(@"player="""))
+                    PlayerCountry = str.Split('=')[1].Replace("\"", "");
+                else if (countryRegEx.IsMatch(str))
                     AddCountry(str, index);
-                    continue;
-                }
-
-                if (provRegEx.IsMatch(str))
-                {
+                else if (provRegEx.IsMatch(str))
                     AddProvince(str, index);
-                    continue;
-                }
             }
         }
 

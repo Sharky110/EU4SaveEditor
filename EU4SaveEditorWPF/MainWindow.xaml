@@ -15,12 +15,12 @@
         </Menu>
         <Label x:Name="lblSearchCountries" Content="Search country:" HorizontalAlignment="Left" 
                Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
-        <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" Text="{Binding Path=FoundCountry}"
+        <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" Text="{Binding Path=CurrentCountry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
 
         <Label x:Name="lblCounriesCount" Content="{Binding Path=Items.Count, ElementName=lbCountries}" HorizontalAlignment="Left" 
                Margin="78,119,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="lbCountries"  SelectedItem="{ Binding Path=CurrentCountry}" SelectedValue="{Binding Path=FoundCountry}"
+        <ListBox x:Name="lbCountries"  SelectedItem="{ Binding Path=CurrentCountry, Mode=TwoWay}" SelectionChanged="lbCountries_SelectionChanged"
                   ItemsSource="{Binding Path=ListOfCountries}"
                  HorizontalAlignment="Left" Height="300" Margin="10,150,0,0" 
                  VerticalAlignment="Top" Width="200">
