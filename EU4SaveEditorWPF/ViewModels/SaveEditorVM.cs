@@ -119,13 +119,12 @@ namespace EU4SaveEditorWPF.ViewModels
 
             FilePath = openFileDialog.FileName;
 
-            var sourceFile = await Task.Run(() => File.ReadAllText(FilePath, Encoding.GetEncoding(1252)));
-
-            _saveParser.SaveFile = sourceFile.Split('\n');
-
-            await Task.Run(() => _saveParser.FindAllCountries());
-            await Task.Run(() => _saveParser.FindAllProvinces());
-
+            var sourceFile = await Task.Run(() => File.ReadAllText(FilePath, Encoding.GetEncoding(1252))).ConfigureAwait(false);
+           
+            _saveParser.SaveFile = await Task.Run(() => sourceFile.Split('\n'));
+           
+            await Task.Run(() => _saveParser.FindCountriesAndProvinces());
+           
             ListOfCountries = _saveParser.GetCountries();
         }
 

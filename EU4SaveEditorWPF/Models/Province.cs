@@ -2,19 +2,21 @@
 {
     public class Province
     {
-        public Province(string vName = "Useless", int vId = 0, int vIndex = 0, string owner = "Useless")
+        private static int idCounter = 0;
+
+        public Province(string name = "Useless", int positionInFile = 0, string owner = "Useless")
         {
-            Name = vName;
-            PositionInFile = vId;
-            Id = vIndex;
-            OwnerName = owner;
+            Id = idCounter++;
+            Name = name;
+            PositionInFile = positionInFile;
+            Owner = owner;
         }
 
         public string Name;
         public int Id;
         public int PositionInFile;
 
-        public string OwnerName;
+        public string Owner;
 
         public string Adm { get; set; }
         public int AdmId;

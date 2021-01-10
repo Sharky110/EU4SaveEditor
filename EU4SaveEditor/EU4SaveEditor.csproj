@@ -83,11 +83,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Aligres.SaveParser\Aligres.SaveParser.csproj">
-      <Project>{382878c6-f788-4435-bb9b-af6ebb0a0482}</Project>
-      <Name>Aligres.SaveParser</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

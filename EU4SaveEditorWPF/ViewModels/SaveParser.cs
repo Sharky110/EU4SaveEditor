@@ -53,53 +53,64 @@ namespace EU4SaveEditorWPF.ViewModels
 
         #endregion --------------------------------------------------------------------------------
 
-        public void FindAllCountries()
-        {
-            var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
-
-            var countries = SaveFile.Select((value, index) => new {i = index, s = value})
-                .Where(t => countryRegEx.IsMatch(t.s))
-                .Select(r => new Country { Name = r.s.Split('\"')[1], Id = r.i + 1})
-                .GroupBy(r => r.Name)
-                .Select(r => r.First())
-                .ToList();
-
-            Countries.AddRange(countries);
-        }
-
-        public void FindAllProvinces()
+        public void FindCountriesAndProvinces()
         {
             var index = 0;
-            var provinceCounter = 0;
-            var provRegEx = new Regex("name=\"[A-Z]*[a-z]*"+ @"\s" + "*[A-Z][a-z]*\"", RegexOptions.Singleline);
+            var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
+            var provRegEx = new Regex("name=\"[A-Z]*[a-z]*" + @"\s" + "*[A-Z][a-z]*\"", RegexOptions.Singleline);
 
             foreach (string str in SaveFile)
             {
                 index++;
 
-                if (!provRegEx.IsMatch(str))
+                if (str.Length < 4)
                     continue;
 
-                var provinceName = str.Split('\"')[1];
-
-                var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
-                if (isProvinceAlreadyExists)
+                if (countryRegEx.IsMatch(str))
+                {
+                    AddCountry(str, index);
                     continue;
+                }
 
-                var ownerString = SaveFile[index];
-                var ownerName = GetOwnerName(ownerString);
-
-                if (ownerName == "Not Province")
+                if (provRegEx.IsMatch(str))
+                {
+                    AddProvince(str, index);
                     continue;
-
-                Provinces.Add(new Province(provinceName, index, provinceCounter, ownerName));
-                provinceCounter++;
+                }
             }
+        }
+
+        private void AddCountry(string str, int index)
+        {
+            var countryName = str.Split('\"')[1];
+            var isCountryAlreadyExists = Countries.ToArray().Any(p => p.Name == countryName);
+            if (isCountryAlreadyExists)
+                return;
+
+            var dd = new Country { Name = countryName, Id = index + 1 };
+            Countries.Add(dd);
+        }
+
+        private void AddProvince(string str, int index)
+        {
+            var provinceName = str.Split('\"')[1];
+
+            var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
+            if (isProvinceAlreadyExists)
+                return;
+
+            var ownerString = SaveFile[index];
+
+            var ownerName = GetOwnerName(ownerString);
+            if (ownerName == "Not Province")
+                return;
+
+            Provinces.Add(new Province(provinceName, index, ownerName));
         }
 
         public List<string> GetCountries()
         {
-            var list = Provinces.Select(p => p.OwnerName).Distinct().ToList();
+            var list = Provinces.Select(p => p.Owner).Distinct().ToList();
             list.Sort();
             return list;
         }
@@ -175,7 +186,7 @@ namespace EU4SaveEditorWPF.ViewModels
         public List<string> GetProvincesOfContry(string selectedCountry)
         {
             ProvincesOfCountry.Clear();
-            ProvincesOfCountry.AddRange(Provinces.Where(province => selectedCountry == province.OwnerName));
+            ProvincesOfCountry.AddRange(Provinces.Where(province => selectedCountry == province.Owner));
             return ProvincesOfCountry.Select(p => p.Name).ToList();
         }
 
