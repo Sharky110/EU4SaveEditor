@@ -1,21 +1,37 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using EU4SaveEditorWPF.Models;
 
-namespace Aligres.SaveParser
+namespace EU4SaveEditorWPF.ViewModels
 {
     public class SaveParser
     {
         #region ----- Variables -------------------------------------------------------------------
 
         private readonly List<Country> Countries;
+        private string[] _saveFile;
         public readonly List<Province> Provinces;
         public readonly List<Province> ProvincesOfCountry;
         public readonly List<int> SelectedProvincesId;
         public int CurrentProvince;
-        public string[] SaveFile;
+        
 
         #endregion --------------------------------------------------------------------------------
+
+        #region ----- Properties ------------------------------------------------------------------
+
+        public string[] SaveFile
+        {
+            get { return _saveFile; }
+            set
+            {
+                _saveFile = value;
+                ClearLists();
+            }
+        }
+
+        #endregion
 
         #region ----- Singleton -------------------------------------------------------------------
 
@@ -55,9 +71,6 @@ namespace Aligres.SaveParser
         {
             var index = 0;
             var provinceCounter = 0;
-
-            string provinceName;
-
             var provRegEx = new Regex("name=\"[A-Z]*[a-z]*"+ @"\s" + "*[A-Z][a-z]*\"", RegexOptions.Singleline);
 
             foreach (string str in SaveFile)
@@ -67,7 +80,7 @@ namespace Aligres.SaveParser
                 if (!provRegEx.IsMatch(str))
                     continue;
 
-                provinceName = str.Split('\"')[1];
+                var provinceName = str.Split('\"')[1];
 
                 var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
                 if (isProvinceAlreadyExists)
@@ -168,7 +181,7 @@ namespace Aligres.SaveParser
 
         public Province GetProvince(string provinceName)
         {
-            Province tempProvince = new Province();
+            var tempProvince = new Province();
             foreach (var province in ProvincesOfCountry.Where(province => province.Name == provinceName))
             {
                 ChangeProvinceParameters(province);

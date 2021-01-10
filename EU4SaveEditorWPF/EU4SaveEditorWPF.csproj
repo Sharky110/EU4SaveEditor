@@ -57,8 +57,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\Province.cs" />
     <Compile Include="ViewModels\SaveEditorVM.cs" />
     <Compile Include="ViewModels\SaveEditorVMBase.cs" />
+    <Compile Include="ViewModels\SaveParser.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

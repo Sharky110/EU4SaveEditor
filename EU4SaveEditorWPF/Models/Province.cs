@@ -1,4 +1,4 @@
-﻿namespace Aligres.SaveParser
+﻿namespace EU4SaveEditorWPF.Models
 {
     public class Province
     {

@@ -1,4 +1,4 @@
-﻿using Aligres.SaveParser;
+﻿using EU4SaveEditorWPF.Models;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Linq;
 
-namespace EU4SaveEditorWPF
+namespace EU4SaveEditorWPF.ViewModels
 {
     class SaveEditorVM : SaveEditorVMBase
     {
@@ -123,8 +122,6 @@ namespace EU4SaveEditorWPF
             var sourceFile = await Task.Run(() => File.ReadAllText(FilePath, Encoding.GetEncoding(1252)));
 
             _saveParser.SaveFile = sourceFile.Split('\n');
-
-            _saveParser.ClearLists();
 
             await Task.Run(() => _saveParser.FindAllCountries());
             await Task.Run(() => _saveParser.FindAllProvinces());
