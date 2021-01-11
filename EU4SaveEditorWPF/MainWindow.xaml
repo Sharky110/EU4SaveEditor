@@ -13,11 +13,20 @@
                 <MenuItem x:Name="SaveFile" Header="Save file" Command="{Binding Path=SaveFileCommand}"/>
             </MenuItem>
         </Menu>
+
+        <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="{Binding Path=FilePath}"
+               Margin="10,25,0,0" VerticalAlignment="Top" Height="30" Width="759"/>
+        
         <Label x:Name="lblSearchCountries" Content="Search country:" HorizontalAlignment="Left" 
                Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
         <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" Text="{Binding Path=CurrentCountry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
 
+        <Label x:Name="lblPlayerCountry" Content="{Binding Path=PlayerCountry, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" 
+               Margin="215,60,0,0" VerticalAlignment="Top" Height="26" Width="200"/>
+
+        <Label x:Name="lblCountries" Content="Countries:" HorizontalAlignment="Left" 
+               Margin="10,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
         <Label x:Name="lblCounriesCount" Content="{Binding Path=Items.Count, ElementName=lbCountries}" HorizontalAlignment="Left" 
                Margin="78,119,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbCountries"  SelectedItem="{ Binding Path=CurrentCountry, Mode=TwoWay}" SelectionChanged="lbCountries_SelectionChanged"
@@ -26,6 +35,8 @@
                  VerticalAlignment="Top" Width="200">
         </ListBox>
 
+        <Label x:Name="lblProvinces" Content="Provinces:" HorizontalAlignment="Left" 
+               Margin="215,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
         <Label x:Name="lblProvincesCount" Content="{Binding Path=Items.Count, ElementName=lbProvinces}" HorizontalAlignment="Left" 
             Margin="283,119,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="lbProvinces" SelectionMode="Single" HorizontalAlignment="Left" Height="300" 
@@ -33,14 +44,6 @@
                  ItemsSource="{Binding Path=ListOfProvinces}"
                  Margin="215,150,0,0" VerticalAlignment="Top" Width="200"/>
 
-
-        <Label x:Name="lblCountries" Content="Countries:" HorizontalAlignment="Left" 
-               Margin="10,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
-        <Label x:Name="lblProvinces" Content="Provinces:" HorizontalAlignment="Left" 
-               Margin="215,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>
-        
-        <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="{Binding Path=FilePath}"
-               Margin="10,25,0,0" VerticalAlignment="Top" Height="30"/>
         <Canvas x:Name="canvasParameters" HorizontalAlignment="Left" Height="300" Margin="439,150,0,0" VerticalAlignment="Top" Width="330">
             <Label x:Name="lblAdm" Content="Base Tax" HorizontalAlignment="Left" VerticalAlignment="Top" 
                    Width="63" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>

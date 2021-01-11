@@ -26,10 +26,10 @@ namespace EU4SaveEditorWPF.ViewModels
         private List<string> _listOfCountries;
         private List<string> _listOfProvinces;
 
-        private string _filePath;
+        private string _filePath = "Current file: ";
         private string _currentCountry;
         private string _currentProvinceName;
-        private string _foundCountry;
+        private string _playerCountry = "Player's Country: ";
 
         private Province _currentProvince;
 
@@ -85,10 +85,10 @@ namespace EU4SaveEditorWPF.ViewModels
             }
         }
 
-        public string FoundCountry
+        public string PlayerCountry
         {
-            get => _foundCountry;
-            set => SetProperty(ref _foundCountry, value);
+            get => _playerCountry;
+            set => SetProperty(ref _playerCountry, value);
         }
 
         #endregion
@@ -117,16 +117,19 @@ namespace EU4SaveEditorWPF.ViewModels
             if (string.IsNullOrEmpty(openFileDialog.FileName))
                 return;
 
-            FilePath = openFileDialog.FileName;
+            var path = openFileDialog.FileName;
+            var sourceFile = await Task.Run(() => File.ReadAllLines(path, Encoding.GetEncoding(1252))).ConfigureAwait(false);
 
-            var sourceFile = await Task.Run(() => File.ReadAllLines(FilePath, Encoding.GetEncoding(1252))).ConfigureAwait(false);
-           
+            FilePath += path;
             _saveParser.SaveFile = sourceFile;
+
+            
 
             await Task.Run(() => _saveParser.FindCountriesAndProvinces()).ConfigureAwait(false);
 
             ListOfCountries = _saveParser.GetCountries();
 
+            PlayerCountry += _saveParser.PlayerCountry;
             FilePath += " ...Done.";
         }
 
@@ -180,7 +183,7 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public void SetPoints()
         {
-            if (string.IsNullOrEmpty(FilePath) || _currentProvince.Adm == null)
+            if (string.IsNullOrEmpty(FilePath) || _currentProvince == null)
                 return;
 
             _saveParser.SaveFile[_currentProvince.AdmId] = "    base_tax=" + _currentProvince.Adm;
