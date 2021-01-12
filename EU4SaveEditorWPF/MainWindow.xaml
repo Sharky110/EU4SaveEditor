@@ -11,19 +11,31 @@
             <MenuItem x:Name="MenuFile" Header="File">
                 <MenuItem x:Name="OpenFile" Header="Open file" Command="{Binding Path=OpenFileCommand}"/>
                 <MenuItem x:Name="SaveFile" Header="Save file" Command="{Binding Path=SaveFileCommand}"/>
+                <MenuItem x:Name="Exit" Header="Exit" Command="{Binding Path=ExitCommand}"/>
             </MenuItem>
         </Menu>
 
-        <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="{Binding Path=FilePath}"
-               Margin="10,25,0,0" VerticalAlignment="Top" Height="30" Width="759"/>
+        <Label x:Name="lblState" HorizontalAlignment="Left" Content="State:"
+               Margin="10,25,0,0" VerticalAlignment="Top" Height="30" Width="40"/>
+        <Label x:Name="lblStateValue" HorizontalAlignment="Left" Content="{Binding Path=State, UpdateSourceTrigger=PropertyChanged}"
+               Margin="50,25,0,0" VerticalAlignment="Top" Height="30"/>
+
+        <Label x:Name="lblFilePath" HorizontalAlignment="Left" Content="Current file:"
+               Margin="215,25,0,0" VerticalAlignment="Top" Height="30" Width="75"/>
+        <Label x:Name="lblFilePathValue" HorizontalAlignment="Left" Content="{Binding Path=FilePath, UpdateSourceTrigger=PropertyChanged}"
+               Margin="290,25,0,0" VerticalAlignment="Top" Height="30"/>
+
         
+
         <Label x:Name="lblSearchCountries" Content="Search country:" HorizontalAlignment="Left" 
                Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
         <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" Text="{Binding Path=CurrentCountry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
 
-        <Label x:Name="lblPlayerCountry" Content="{Binding Path=PlayerCountry, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" 
-               Margin="215,60,0,0" VerticalAlignment="Top" Height="26" Width="200"/>
+        <Label x:Name="lblPlayerCountry" Content="Player's Country:" HorizontalAlignment="Left" 
+               Margin="215,60,0,0" VerticalAlignment="Top" Height="26" Width="100"/>
+        <Label x:Name="lblPlayerCountryValue" Content="{Binding Path=PlayerCountry, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" 
+               Margin="315,60,0,0" VerticalAlignment="Top" Height="26" Width="100"/>
 
         <Label x:Name="lblCountries" Content="Countries:" HorizontalAlignment="Left" 
                Margin="10,119,0,0" VerticalAlignment="Top" Height="26" Width="63"/>

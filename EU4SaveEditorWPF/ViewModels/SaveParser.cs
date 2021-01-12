@@ -106,7 +106,10 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public List<string> GetCountries()
         {
-            var list = Provinces.Select(p => p.Owner).Distinct().ToList();
+            var list = Provinces
+                .Select(p => p.Owner)
+                .Distinct()
+                .ToList();
             list.Sort();
             return list;
         }

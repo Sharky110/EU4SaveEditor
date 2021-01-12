@@ -1,4 +1,5 @@
-﻿using EU4SaveEditorWPF.Models;
+﻿using EU4SaveEditorWPF.Enums;
+using EU4SaveEditorWPF.Models;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.Configuration;
@@ -21,40 +22,30 @@ namespace EU4SaveEditorWPF.ViewModels
 
         #endregion
 
-        #region Private variables
-
-        private List<string> _listOfCountries;
-        private List<string> _listOfProvinces;
-
-        private string _filePath = "Current file: ";
-        private string _currentCountry;
-        private string _currentProvinceName;
-        private string _playerCountry = "Player's Country: ";
-
-        private Province _currentProvince;
-
-        #endregion
-
         #region Properties
 
+        private List<string> _listOfCountries;
         public List<string> ListOfCountries
         {
             get => _listOfCountries;
             set => SetProperty(ref _listOfCountries, value); 
         }
 
+        private List<string> _listOfProvinces;
         public List<string> ListOfProvinces
         {
             get => _listOfProvinces;
             set => SetProperty(ref _listOfProvinces, value);
         }
 
+        private string _filePath;
         public string FilePath
         {
             get => _filePath;
             set => SetProperty(ref _filePath, value); 
         }
 
+        private string _currentCountry;
         public string CurrentCountry
         {
             get => _currentCountry;
@@ -65,6 +56,7 @@ namespace EU4SaveEditorWPF.ViewModels
             }
         }
 
+        private Province _currentProvince;
         public Province CurrentProvince
         {
             get
@@ -75,6 +67,7 @@ namespace EU4SaveEditorWPF.ViewModels
             set => SetProperty(ref _currentProvince, value);
         }
 
+        private string _currentProvinceName;
         public string CurrentProvinceName
         {
             get => _currentProvinceName;
@@ -85,10 +78,18 @@ namespace EU4SaveEditorWPF.ViewModels
             }
         }
 
+        private string _playerCountry;
         public string PlayerCountry
         {
             get => _playerCountry;
             set => SetProperty(ref _playerCountry, value);
+        }
+
+        private string _state = WorkingState.Ready.ToString();
+        public string State
+        {
+            get => _state;
+            set => SetProperty(ref _state, value);
         }
 
         #endregion
@@ -97,6 +98,7 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public ICommand OpenFileCommand { get; }
         public ICommand SaveFileCommand { get; }
+        public ICommand ExitCommand { get; }
 
         #endregion
 
@@ -104,6 +106,7 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             OpenFileCommand = new RelayCommand(c => OpenFile());
             SaveFileCommand = new RelayCommand(c => SaveFile());
+            ExitCommand = new RelayCommand(c => Exit());
         }
 
         public async void OpenFile()
@@ -117,20 +120,35 @@ namespace EU4SaveEditorWPF.ViewModels
             if (string.IsNullOrEmpty(openFileDialog.FileName))
                 return;
 
-            var path = openFileDialog.FileName;
-            var sourceFile = await Task.Run(() => File.ReadAllLines(path, Encoding.GetEncoding(1252))).ConfigureAwait(false);
+            FilePath = openFileDialog.FileName;
 
-            FilePath += path;
-            _saveParser.SaveFile = sourceFile;
-
+            _saveParser.SaveFile = await ReadFile(FilePath).ConfigureAwait(false);
             
+            await FindProvinces().ConfigureAwait(false);
 
-            await Task.Run(() => _saveParser.FindCountriesAndProvinces()).ConfigureAwait(false);
+            ListOfCountries = await GetCountries().ConfigureAwait(false);
 
-            ListOfCountries = _saveParser.GetCountries();
+            PlayerCountry = _saveParser.PlayerCountry;
 
-            PlayerCountry += _saveParser.PlayerCountry;
-            FilePath += " ...Done.";
+            State = WorkingState.Done.ToString();
+        }
+
+        private Task<string[]> ReadFile(string path)
+        {
+            State = WorkingState.ReadingFile.ToString();
+            return Task.Run(() => File.ReadAllLines(path, Encoding.GetEncoding(1252)));
+        }
+
+        private Task FindProvinces()
+        {
+            State = WorkingState.FindingCountries.ToString();
+            return Task.Run(() => _saveParser.FindCountriesAndProvinces());
+        }
+
+        private Task<List<string>> GetCountries()
+        {
+            State = WorkingState.GettingCountries.ToString();
+            return Task.Run(() => _saveParser.GetCountries());
         }
 
         public void SaveFile()
@@ -160,16 +178,9 @@ namespace EU4SaveEditorWPF.ViewModels
             }
         }
 
-        public void FindCountry(string text, ListBox lbCountries)
+        private void Exit()
         {
-            for (int i = 0; i < lbCountries.Items.Count; i++)
-            {
-                if (lbCountries.Items[i].ToString().StartsWith(text))
-                {
-                    lbCountries.SelectedIndex = i;
-                    break;
-                }
-            }
+            Application.Current.Shutdown();
         }
 
         public void GetProvincesOfCountry()

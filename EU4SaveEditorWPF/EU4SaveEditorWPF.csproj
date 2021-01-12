@@ -58,6 +58,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Commands\RelayCommand.cs" />
+    <Compile Include="Enums\WorkingState.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\Province.cs" />
     <Compile Include="ViewModels\SaveEditorVM.cs" />
