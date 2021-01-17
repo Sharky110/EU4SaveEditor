@@ -76,29 +76,28 @@ namespace EU4SaveEditorWPF.ViewModels
         private void AddCountry(string str, int index)
         {
             var countryName = str.Split('\"')[1];
-            var isCountryAlreadyExists = Countries.ToArray().Any(p => p.Name == countryName);
+            var isCountryAlreadyExists = Countries.Any(p => p.Name == countryName);
             if (isCountryAlreadyExists)
                 return;
 
-            var dd = new Country { Name = countryName, Id = index + 1 };
-            Countries.Add(dd);
+            var tempCountry = new Country { Name = countryName, Id = index + 1 };
+            Countries.Add(tempCountry);
         }
 
         private void AddProvince(string str, int index)
         {
             var provinceName = str.Split('\"')[1];
-
             var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
             if (isProvinceAlreadyExists)
                 return;
 
             var ownerString = SaveFile[index];
-
             var ownerName = GetOwnerName(ownerString);
             if (ownerName == "Not Province")
                 return;
 
-            Provinces.Add(new Province(provinceName, index, ownerName));
+            var tempProvince = new Province(provinceName, index, ownerName);
+            Provinces.Add(tempProvince);
         }
 
         public List<string> GetCountries()
@@ -188,15 +187,15 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public List<Province> GetProvinces(string[] provinceNames)
         {
-            var tempProvince = new List<Province>();
+            var tempProvinces = new List<Province>();
             var list = ProvincesOfCountry.Where(province => provinceNames.Contains(province.Name));
             foreach (var province in list)
             {
                 ChangeProvinceParameters(province);
-                tempProvince.Add(province);
+                tempProvinces.Add(province);
             }
 
-            return tempProvince;
+            return tempProvinces;
         }
 
         public void ClearLists()

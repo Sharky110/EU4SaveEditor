@@ -126,11 +126,8 @@ namespace EU4SaveEditorWPF.ViewModels
 
         public async void OpenFile()
         {
-            var openFileDialog = new OpenFileDialog()
-            {
-                Filter = ConfigurationManager.AppSettings.Get(DialogFilter)
-            };
-
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = ConfigurationManager.AppSettings.Get(DialogFilter);            
             openFileDialog.ShowDialog();
             if (string.IsNullOrEmpty(openFileDialog.FileName))
                 return;
@@ -173,11 +170,9 @@ namespace EU4SaveEditorWPF.ViewModels
                 MessageBox.Show("File not opened.", "Error.");
                 return;
             }
-            var saveFileDialog = new SaveFileDialog()
-            {
-                Filter = ConfigurationManager.AppSettings.Get(DialogFilter)
-            };
 
+            var saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = ConfigurationManager.AppSettings.Get(DialogFilter);
             saveFileDialog.ShowDialog();
             if (string.IsNullOrEmpty(saveFileDialog.FileName))
                 return;
@@ -198,11 +193,12 @@ namespace EU4SaveEditorWPF.ViewModels
             Application.Current.Shutdown();
         }
 
-        public void GetProvincesOfCountry()
+        private void GetProvincesOfCountry()
         {
             ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
         }
-        public void SetCurrentProvinces()
+
+        private void SetCurrentProvinces()
         {
             var names = CurrentProvinceNames.Split(' ');
             CurrentProvinces = _saveParser.GetProvinces(names);
@@ -210,7 +206,7 @@ namespace EU4SaveEditorWPF.ViewModels
                 CurrentProvince = CurrentProvinces[0];
         }
 
-        public void SetPoints()
+        private void SetPoints()
         {
             if (string.IsNullOrEmpty(FilePath) || CurrentProvinces.Count < 1)
                 return;
