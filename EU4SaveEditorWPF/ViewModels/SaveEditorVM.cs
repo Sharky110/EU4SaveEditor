@@ -55,26 +55,41 @@ namespace EU4SaveEditorWPF.ViewModels
                 GetProvincesOfCountry();
             }
         }
-
+        private bool IsAlreadyCalledSetPoints = false;
         private Province _currentProvince;
         public Province CurrentProvince
         {
             get
             {
-                SetPoints();
+                if (!IsAlreadyCalledSetPoints)
+                {
+                    IsAlreadyCalledSetPoints = true;
+                    SetPoints();
+                    IsAlreadyCalledSetPoints = false;
+                }
                 return _currentProvince;
             }
             set => SetProperty(ref _currentProvince, value);
         }
 
-        private string _currentProvinceName;
-        public string CurrentProvinceName
+        private List<Province> _currentProvinces = new List<Province>();
+        public List<Province> CurrentProvinces
         {
-            get => _currentProvinceName;
+            get
+            {
+                return _currentProvinces;
+            }
+            set => SetProperty(ref _currentProvinces, value);
+        }
+
+        private string _currentProvinceNames;
+        public string CurrentProvinceNames
+        {
+            get => string.Join(" ", _currentProvinceNames);
             set
             {
-                SetProperty(ref _currentProvinceName, value);
-                SetCurrentProvince();
+                SetProperty(ref _currentProvinceNames, value);
+                SetCurrentProvinces();
             }
         }
 
@@ -187,19 +202,25 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             ListOfProvinces = _saveParser.GetProvincesOfContry(CurrentCountry);
         }
-        public void SetCurrentProvince()
+        public void SetCurrentProvinces()
         {
-            CurrentProvince = _saveParser.GetProvince(CurrentProvinceName);
+            var names = CurrentProvinceNames.Split(' ');
+            CurrentProvinces = _saveParser.GetProvinces(names);
+            if (CurrentProvinces.Count >= 1)
+                CurrentProvince = CurrentProvinces[0];
         }
 
         public void SetPoints()
         {
-            if (string.IsNullOrEmpty(FilePath) || _currentProvince == null)
+            if (string.IsNullOrEmpty(FilePath) || CurrentProvinces.Count < 1)
                 return;
 
-            _saveParser.SaveFile[_currentProvince.AdmId] = "    base_tax=" + _currentProvince.Adm;
-            _saveParser.SaveFile[_currentProvince.DipId] = "    base_production=" + _currentProvince.Dip;
-            _saveParser.SaveFile[_currentProvince.MilId] = "    base_manpower=" + _currentProvince.Mil;
+            foreach (var currentProvince in CurrentProvinces)
+            {
+                _saveParser.SaveFile[currentProvince.Points.AdmId] = $"    base_tax={CurrentProvince.Points.Adm}";
+                _saveParser.SaveFile[currentProvince.Points.DipId] = $"    base_production={CurrentProvince.Points.Dip}";
+                _saveParser.SaveFile[currentProvince.Points.MilId] = $"    base_manpower={CurrentProvince.Points.Mil}";
+            }
         }
     }
 }

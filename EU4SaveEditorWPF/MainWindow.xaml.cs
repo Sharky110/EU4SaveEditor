@@ -1,4 +1,5 @@
 ﻿using EU4SaveEditorWPF.ViewModels;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,6 +27,23 @@ namespace EU4SaveEditorWPF
             var newSelectedItem = e.AddedItems[0];
             if (newSelectedItem != null)
                 (sender as ListBox).ScrollIntoView(newSelectedItem);
+        }
+
+        private void lbProvinces_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var list = sender as ListBox;
+            if (list.SelectedItems.Count <= 1)
+                return;
+
+            var context = DataContext as SaveEditorVM;
+            context.CurrentProvinceNames = "";
+
+            var tempSelectedItems = new List<string>();
+
+            foreach (var item in list.SelectedItems)
+                tempSelectedItems.Add((string)item);
+
+            context.CurrentProvinceNames = string.Join(" ", tempSelectedItems);
         }
     }
 }

@@ -18,14 +18,7 @@
 
         public string Owner;
 
-        public string Adm { get; set; }
-        public int AdmId;
-
-        public string Dip { get; set; }
-        public int DipId;
-
-        public string Mil { get; set; }
-        public int MilId;
+        public PowerPoints Points { get; set; } = new PowerPoints();
 
         public string OriginalCulture { get; set; }
         public string CurrentCulture { get; set; }

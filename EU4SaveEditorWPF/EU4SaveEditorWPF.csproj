@@ -60,6 +60,7 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Enums\WorkingState.cs" />
     <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\PowerPoints.cs" />
     <Compile Include="Models\Province.cs" />
     <Compile Include="ViewModels\SaveEditorVM.cs" />
     <Compile Include="ViewModels\SaveEditorVMBase.cs" />

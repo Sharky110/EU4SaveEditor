@@ -15,7 +15,6 @@ namespace EU4SaveEditorWPF.ViewModels
         public readonly List<Province> ProvincesOfCountry;
         public readonly List<int> SelectedProvincesId;
         public string PlayerCountry;
-        public int CurrentProvince;
         
 
         #endregion --------------------------------------------------------------------------------
@@ -43,8 +42,6 @@ namespace EU4SaveEditorWPF.ViewModels
             Provinces = new List<Province>();
             ProvincesOfCountry = new List<Province>();
             SelectedProvincesId = new List<int>();
-
-            CurrentProvince = 0;
         }
 
         public static SaveParser GetInstance()
@@ -153,8 +150,8 @@ namespace EU4SaveEditorWPF.ViewModels
 
                 if (regExTax.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.Adm = SaveFile[i].Split('=')[1];
-                    currentProvince.AdmId = i;
+                    currentProvince.Points.Adm = SaveFile[i].Split('=')[1];
+                    currentProvince.Points.AdmId = i;
 
                     closeId = i;
                     break;
@@ -165,8 +162,8 @@ namespace EU4SaveEditorWPF.ViewModels
             {
                 if (regExProd.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.Dip = SaveFile[i].Split('=')[1];
-                    currentProvince.DipId = i;
+                    currentProvince.Points.Dip = SaveFile[i].Split('=')[1];
+                    currentProvince.Points.DipId = i;
                     break;
                 }
             }
@@ -175,8 +172,8 @@ namespace EU4SaveEditorWPF.ViewModels
             {
                 if (regExManPow.IsMatch(SaveFile[i]))
                 {
-                    currentProvince.Mil = SaveFile[i].Split('=')[1];
-                    currentProvince.MilId = i;
+                    currentProvince.Points.Mil = SaveFile[i].Split('=')[1];
+                    currentProvince.Points.MilId = i;
                     break;
                 }
             }
@@ -189,15 +186,14 @@ namespace EU4SaveEditorWPF.ViewModels
             return ProvincesOfCountry.Select(p => p.Name).ToList();
         }
 
-        public Province GetProvince(string provinceName)
+        public List<Province> GetProvinces(string[] provinceNames)
         {
-            var tempProvince = new Province();
-            foreach (var province in ProvincesOfCountry.Where(province => province.Name == provinceName))
+            var tempProvince = new List<Province>();
+            var list = ProvincesOfCountry.Where(province => provinceNames.Contains(province.Name));
+            foreach (var province in list)
             {
                 ChangeProvinceParameters(province);
-                CurrentProvince = province.Id;
-                tempProvince = province;
-                break;
+                tempProvince.Add(province);
             }
 
             return tempProvince;
