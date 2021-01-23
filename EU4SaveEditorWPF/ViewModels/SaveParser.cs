@@ -55,13 +55,13 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             var index = 0;
             var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
-            var provRegEx = new Regex("name=\"[A-Z]*[a-z]*" + @"\s" + "*[A-Z][a-z]*\"", RegexOptions.Singleline);
+            var provRegEx = new Regex("-[0-9]{1,}=", RegexOptions.Singleline);
 
             foreach (string str in SaveFile)
             {
                 index++;
 
-                if (str.Length < 6)
+                if (str.Length < 3)
                     continue;
 
                 if(index < 20 && str.Contains(@"player="""))
@@ -69,7 +69,7 @@ namespace EU4SaveEditorWPF.ViewModels
                 else if (countryRegEx.IsMatch(str))
                     AddCountry(str, index);
                 else if (provRegEx.IsMatch(str))
-                    AddProvince(str, index);
+                    AddProvince(str, index-1);
             }
         }
 
@@ -86,12 +86,35 @@ namespace EU4SaveEditorWPF.ViewModels
 
         private void AddProvince(string str, int index)
         {
-            var provinceName = str.Split('\"')[1];
-            var isProvinceAlreadyExists = Provinces.Any(p => p.Name == provinceName);
-            if (isProvinceAlreadyExists)
-                return;
+            var counter = 0;
+            var endIndex = 0;
+            for (int i = index; i < index + 1000; i++)
+            {
+                if (SaveFile[i].Contains('{'))
+                    counter += 1;
+                if (SaveFile[i].Contains('}'))
+                    counter -= 1;
+                if(counter == 0)
+                {
+                    endIndex = i;
+                    break;
+                }
 
-            var ownerString = SaveFile[index];
+            }
+
+            var provinceName = string.Empty;
+            var nameIndex = 0;
+            for (int i = index; i < index+10; i++)
+            {
+                if (SaveFile[i].Contains("name"))
+                {
+                    provinceName = SaveFile[i].Split('\"')[1];
+                    nameIndex = i;
+                    break;
+                }
+            }
+
+            var ownerString = SaveFile[nameIndex + 1];
             var ownerName = GetOwnerName(ownerString);
             if (ownerName == "Not Province")
                 return;
@@ -113,11 +136,12 @@ namespace EU4SaveEditorWPF.ViewModels
         private string GetOwnerName(string targetString)
         {
             var ownerPattern = new Regex("owner=\"[A-Z]{3}\"");
-            var noOwnerPattern = new Regex("previ");
-
+            var noOwnerPattern = new Regex("institutions");
+            var noOwnerPattern2 = new Regex("previous_controller");
+            
             if (ownerPattern.IsMatch(targetString))
                 return targetString.Split('\"')[1];
-            else if (noOwnerPattern.IsMatch(targetString))
+            else if (noOwnerPattern.IsMatch(targetString) || noOwnerPattern2.IsMatch(targetString))
                 return "_No Owner";
             else
                 return "Not Province";

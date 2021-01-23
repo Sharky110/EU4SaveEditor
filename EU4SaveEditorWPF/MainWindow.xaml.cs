@@ -43,7 +43,7 @@ namespace EU4SaveEditorWPF
             foreach (var item in list.SelectedItems)
                 tempSelectedItems.Add((string)item);
 
-            context.CurrentProvinceNames = string.Join(" ", tempSelectedItems);
+            context.CurrentProvinceNames = string.Join(",", tempSelectedItems);
         }
     }
 }

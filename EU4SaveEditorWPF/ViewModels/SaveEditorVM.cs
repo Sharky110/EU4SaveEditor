@@ -85,7 +85,7 @@ namespace EU4SaveEditorWPF.ViewModels
         private string _currentProvinceNames;
         public string CurrentProvinceNames
         {
-            get => string.Join(" ", _currentProvinceNames);
+            get => string.Join(",", _currentProvinceNames);
             set
             {
                 SetProperty(ref _currentProvinceNames, value);
@@ -200,7 +200,7 @@ namespace EU4SaveEditorWPF.ViewModels
 
         private void SetCurrentProvinces()
         {
-            var names = CurrentProvinceNames.Split(' ');
+            var names = CurrentProvinceNames.Split(',');
             CurrentProvinces = _saveParser.GetProvinces(names);
             if (CurrentProvinces.Count >= 1)
                 CurrentProvince = CurrentProvinces[0];
