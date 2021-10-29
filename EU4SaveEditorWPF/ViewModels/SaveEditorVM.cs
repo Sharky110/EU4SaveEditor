@@ -7,7 +7,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace EU4SaveEditorWPF.ViewModels
@@ -55,17 +54,17 @@ namespace EU4SaveEditorWPF.ViewModels
                 GetProvincesOfCountry();
             }
         }
-        private bool IsAlreadyCalledSetPoints = false;
+        private bool _isAlreadyCalledSetPoints;
         private Province _currentProvince;
         public Province CurrentProvince
         {
             get
             {
-                if (!IsAlreadyCalledSetPoints)
+                if (!_isAlreadyCalledSetPoints)
                 {
-                    IsAlreadyCalledSetPoints = true;
+                    _isAlreadyCalledSetPoints = true;
                     SetPoints();
-                    IsAlreadyCalledSetPoints = false;
+                    _isAlreadyCalledSetPoints = false;
                 }
                 return _currentProvince;
             }
@@ -96,7 +95,12 @@ namespace EU4SaveEditorWPF.ViewModels
         private string _playerCountry;
         public string PlayerCountry
         {
-            get => _playerCountry;
+            get
+            {
+                return Country.CountryNames.ContainsKey(_playerCountry)
+                    ? Country.CountryNames[_playerCountry]
+                    : _playerCountry;
+            }
             set => SetProperty(ref _playerCountry, value);
         }
 

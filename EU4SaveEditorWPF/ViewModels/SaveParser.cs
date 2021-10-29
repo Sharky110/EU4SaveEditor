@@ -87,7 +87,6 @@ namespace EU4SaveEditorWPF.ViewModels
         private void AddProvince(string str, int index)
         {
             var counter = 0;
-            var endIndex = 0;
             for (var i = index; i < index + 1000; i++)
             {
                 if (SaveFile[i].Contains('{'))
@@ -96,8 +95,6 @@ namespace EU4SaveEditorWPF.ViewModels
                     counter -= 1;
                 if (counter != 0) 
                     continue;
-                
-                endIndex = i;
                 break;
             }
 
@@ -203,7 +200,10 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             _provincesOfCountry.Clear();
             _provincesOfCountry.AddRange(_provinces.Where(province => selectedCountry == province.Owner));
-            return _provincesOfCountry.Select(p => p.Name).ToList();
+            return _provincesOfCountry
+                .Select(p => p.Name)
+                .OrderBy(s => s)
+                .ToList();
         }
 
         public List<Province> GetProvinces(string[] provinceNames)

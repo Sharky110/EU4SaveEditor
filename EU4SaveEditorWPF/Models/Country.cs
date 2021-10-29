@@ -1,4 +1,6 @@
-﻿namespace EU4SaveEditorWPF.Models
+﻿using System.Collections.Generic;
+
+namespace EU4SaveEditorWPF.Models
 {
     public class Country
     {
@@ -10,5 +12,10 @@
 
         public string Name { get; set; }
         public int Id { get; set; }
+
+        public static readonly Dictionary<string, string> CountryNames = new Dictionary<string, string>()
+        {
+            {"MOS", "Moscovia (MOS)"}
+        };
     }
 }
