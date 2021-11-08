@@ -31,7 +31,10 @@
                Margin="10,60,0,0" VerticalAlignment="Top" Height="26" Width="91"/>
         <TextBox x:Name="tbSearchCountries" HorizontalAlignment="Left" Height="23" Text="{Binding Path=CurrentCountry, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                  Margin="10,91,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200"/>
-
+       
+        <Button x:Name="btnDecreaseAggressiveExppansion" Content="Decrease Aggressive Expansion" Height="25" Width="200"
+                Margin="440, 91,0,0" VerticalAlignment="Top" Command="{Binding Path=DecreaseAggressiveExpansionCommand}"></Button>
+        
         <Label x:Name="lblPlayerCountry" Content="Player's Country:" HorizontalAlignment="Left" 
                Margin="215,60,0,0" VerticalAlignment="Top" Height="26" Width="100"/>
         <Label x:Name="lblPlayerCountryValue" Content="{Binding Path=PlayerCountry, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" 

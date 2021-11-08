@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using EU4SaveEditorWPF.Models;
@@ -13,6 +14,7 @@ namespace EU4SaveEditorWPF.ViewModels
         private string[] _saveFile;
         private readonly List<Province> _provinces;
         private readonly List<Province> _provincesOfCountry;
+        private readonly List<Relation> _relations;
         private readonly List<int> _selectedProvincesId;
         public string PlayerCountry;
         
@@ -40,6 +42,7 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             _countries = new List<Country>();
             _provinces = new List<Province>();
+            _relations = new List<Relation>();
             _provincesOfCountry = new List<Province>();
             _selectedProvincesId = new List<int>();
         }
@@ -56,20 +59,62 @@ namespace EU4SaveEditorWPF.ViewModels
             var index = 0;
             var countryRegEx = new Regex("country=\"[A-Z]{3}\"");
             var provRegEx = new Regex("-[0-9]{1,}=", RegexOptions.Singleline);
+            var relationsRegEx = new Regex("active_relations={");
 
             foreach (var str in SaveFile)
             {
                 index++;
-
+    
                 if (str.Length < 3)
                     continue;
-
+                
                 if(index < 20 && str.Contains(@"player="""))
                     PlayerCountry = str.Split('=')[1].Replace("\"", "");
                 else if (countryRegEx.IsMatch(str))
                     AddCountry(str, index);
                 else if (provRegEx.IsMatch(str))
                     AddProvince(str, index-1);
+                else if (relationsRegEx.IsMatch((str)))
+                    AddRelations(index);
+            }
+        }
+
+        private void AddRelations(int index)
+        {
+            var stack = new Stack<int>();
+            var countryRegEx = new Regex("[A-Z]{1,3}={");
+            var aggressiveExpansionRegEx = new Regex("aggressive_expansion");
+            var currentOpinionRegEx = new Regex("current_opinion=");
+
+            var currentCountry = string.Empty;
+            
+            stack.Push(1);
+
+            while (stack.Count != 0)
+            {
+                var str = SaveFile[index];
+                
+                if(str.Contains('{'))
+                    stack.Push(1);
+                else if(str.Contains('}'))
+                    stack.Pop();
+                
+                if (countryRegEx.IsMatch(str))
+                    currentCountry = str.Split('=')[0].Trim();
+
+                if (aggressiveExpansionRegEx.IsMatch(str))
+                    for (var i = index; i < index + 3; i++)
+                    {
+                        if (!currentOpinionRegEx.IsMatch(SaveFile[i]))
+                            continue;
+                        var currOpinion = SaveFile[i].Split('=')[1].Trim();
+                        var tempRelation = new Relation(i, currentCountry, currOpinion);
+                        _relations.Add(tempRelation);
+                        break;
+                    }
+
+
+                index += 1;
             }
         }
 
@@ -223,6 +268,18 @@ namespace EU4SaveEditorWPF.ViewModels
         {
             _countries.Clear();
             _provinces.Clear();
+        }
+
+        public void DecreaseAggressiveExpansion(string currentCountry)
+        {
+            foreach (var relation in _relations)
+            {
+                if (relation.CountryName != currentCountry)
+                    continue;
+
+                SaveFile[relation.Index] = "\t\t\t\t\tcurrent_opinion=-5";
+                relation.Opinion = "-5";
+            }
         }
     }
 }

@@ -62,6 +62,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\PowerPoints.cs" />
     <Compile Include="Models\Province.cs" />
+    <Compile Include="Models\Relation.cs" />
     <Compile Include="ViewModels\SaveEditorVM.cs" />
     <Compile Include="ViewModels\SaveEditorVMBase.cs" />
     <Compile Include="ViewModels\SaveParser.cs" />

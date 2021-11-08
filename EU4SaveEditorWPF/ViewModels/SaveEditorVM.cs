@@ -118,6 +118,8 @@ namespace EU4SaveEditorWPF.ViewModels
         public ICommand OpenFileCommand { get; }
         public ICommand SaveFileCommand { get; }
         public ICommand ExitCommand { get; }
+        
+        public ICommand DecreaseAggressiveExpansionCommand{ get; }
 
         #endregion
 
@@ -126,6 +128,12 @@ namespace EU4SaveEditorWPF.ViewModels
             OpenFileCommand = new RelayCommand(c => OpenFile());
             SaveFileCommand = new RelayCommand(c => SaveFile());
             ExitCommand = new RelayCommand(c => Exit());
+            DecreaseAggressiveExpansionCommand = new RelayCommand(c => DecreaseAggressiveExpansion());
+        }
+
+        private void DecreaseAggressiveExpansion()
+        {
+            _saveParser.DecreaseAggressiveExpansion(_currentCountry);
         }
 
         public async void OpenFile()
