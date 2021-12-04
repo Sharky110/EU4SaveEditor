@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using EU4SaveEditorWPF.Models;
@@ -103,18 +102,22 @@ namespace EU4SaveEditorWPF.ViewModels
                     currentCountry = str.Split('=')[0].Trim();
 
                 if (aggressiveExpansionRegEx.IsMatch(str))
-                    for (var i = index; i < index + 3; i++)
-                    {
-                        if (!currentOpinionRegEx.IsMatch(SaveFile[i]))
-                            continue;
-                        var currOpinion = SaveFile[i].Split('=')[1].Trim();
-                        var tempRelation = new Relation(i, currentCountry, currOpinion);
-                        _relations.Add(tempRelation);
-                        break;
-                    }
-
+                    AddAggressiveExpansionScore(index, currentOpinionRegEx, currentCountry);
 
                 index += 1;
+            }
+        }
+
+        private void AddAggressiveExpansionScore(int index, Regex currentOpinionRegEx, string currentCountry)
+        {
+            for (var i = index; i < index + 3; i++)
+            {
+                if (!currentOpinionRegEx.IsMatch(SaveFile[i]))
+                    continue;
+                var currOpinion = SaveFile[i].Split('=')[1].Trim();
+                var tempRelation = new Relation(i, currentCountry, currOpinion);
+                _relations.Add(tempRelation);
+                break;
             }
         }
 
@@ -222,29 +225,28 @@ namespace EU4SaveEditorWPF.ViewModels
 
             for (var i = closeId; i < closeId + 10; i++)
             {
-                if (regExProd.IsMatch(SaveFile[i]))
-                {
-                    currentProvince.Points.Dip = SaveFile[i].Split('=')[1];
-                    currentProvince.Points.DipId = i;
-                    break;
-                }
+                if (!regExProd.IsMatch(SaveFile[i])) 
+                    continue;
+                currentProvince.Points.Dip = SaveFile[i].Split('=')[1];
+                currentProvince.Points.DipId = i;
+                break;
             }
 
             for (var i = closeId; i < closeId + 10; i++)
             {
-                if (regExManPow.IsMatch(SaveFile[i]))
-                {
-                    currentProvince.Points.Mil = SaveFile[i].Split('=')[1];
-                    currentProvince.Points.MilId = i;
-                    break;
-                }
+                if (!regExManPow.IsMatch(SaveFile[i])) 
+                    continue;
+                currentProvince.Points.Mil = SaveFile[i].Split('=')[1];
+                currentProvince.Points.MilId = i;
+                break;
             }
         }
 
         public List<string> GetProvincesOfContry(string selectedCountry)
         {
             _provincesOfCountry.Clear();
-            _provincesOfCountry.AddRange(_provinces.Where(province => selectedCountry == province.Owner));
+            var tempProvinces = _provinces.Where(province => selectedCountry == province.Owner);
+            _provincesOfCountry.AddRange(tempProvinces);
             return _provincesOfCountry
                 .Select(p => p.Name)
                 .OrderBy(s => s)
@@ -264,19 +266,18 @@ namespace EU4SaveEditorWPF.ViewModels
             return tempProvinces;
         }
 
-        public void ClearLists()
+        private void ClearLists()
         {
             _countries.Clear();
             _provinces.Clear();
+            _relations.Clear();
         }
 
         public void DecreaseAggressiveExpansion(string currentCountry)
         {
-            foreach (var relation in _relations)
+            var tempRelations = _relations.Where(relation => relation.CountryName == currentCountry);
+            foreach (var relation in tempRelations)
             {
-                if (relation.CountryName != currentCountry)
-                    continue;
-
                 SaveFile[relation.Index] = "\t\t\t\t\tcurrent_opinion=-5";
                 relation.Opinion = "-5";
             }
